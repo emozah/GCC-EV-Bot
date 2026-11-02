@@ -1,10 +1,8 @@
 // @ts-nocheck
-// Cloudflare-generated JavaScript bundle; runtime syntax is verified separately.
 import { DurableObject } from "cloudflare:workers";
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// GCC_EV_Chargers_V5_12.js
 var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScFydrFp3aOtv_DQ2J-SFETbCWh_RxYQYiivj7drfUe8ni0vA/viewform?usp=header";
 var COUNTRIES = {
   "\u{1F1F8}\u{1F1E6} \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629": "\u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629",
@@ -22,7 +20,8 @@ var MAIN_MENU = {
   ],
   resize_keyboard: true,
   is_persistent: true
-};var CHARGER_TYPE_MENU = {
+};
+var CHARGER_TYPE_MENU = {
   keyboard: [
     [{ text: "⚡ شحن سريع DC" }, { text: "🔌 شحن عادي AC" }],
     [{ text: "🔋 جميع أنواع الشحن" }],
@@ -34,10 +33,8 @@ var MAIN_MENU = {
 };
 var SEARCH_MENU = {
   keyboard: [
-    [{ text: "🌍 البحث حسب الدولة" }],
-    [{ text: "🔍 البحث عن محطة" }],
-    [{ text: "📍 مشاركة موقعي", request_location: true }],
-    [{ text: "🏠 القائمة الرئيسية" }]
+    [{ text: "🌍 البحث حسب الدولة" }, { text: "🔍 البحث عن محطة" }],
+    [{ text: "📍 مشاركة موقعي", request_location: true }, { text: "🏠 القائمة الرئيسية" }]
   ],
   resize_keyboard: true,
   is_persistent: true
@@ -79,19 +76,14 @@ function tripBatterySummary(trip, km) {
 }
 function tripDisplayItems(data) {
   const items = Array.isArray(data) ? data : (data.items || []);
-  if (Array.isArray(data) || data.view !== "BATTERY" || !data.battery) {
-    return items;
-  }
+  if (Array.isArray(data) || data.view !== "BATTERY" || !data.battery) return items;
   const b = data.battery;
   if (b.finish >= 20) return [];
-  const eligible = items
-    .filter(item => Number.isFinite(Number(item.km)))
-    .map(item => {
-      const distance = Number(item.km);
-      const estimatedBattery = b.pct - distance * b.perKm;
-      return { ...item, estimatedBattery, distanceFromStart: distance };
-    })
-    .filter(item => item.estimatedBattery >= 20 && item.distanceFromStart >= 0);
+  const eligible = items.filter(item => Number.isFinite(Number(item.km))).map(item => {
+    const distance = Number(item.km);
+    const estimatedBattery = b.pct - distance * b.perKm;
+    return { ...item, estimatedBattery, distanceFromStart: distance };
+  }).filter(item => item.estimatedBattery >= 20 && item.distanceFromStart >= 0);
   return eligible.sort((a, c) => {
     const scoreA = Math.abs(a.distanceFromStart - b.targetKm);
     const scoreC = Math.abs(c.distanceFromStart - b.targetKm);
@@ -120,9 +112,7 @@ async function telegram(token, method, payload) {
     throw new Error(`Telegram HTTP ${response.status}: ${errorBody}`);
   }
   const data = await response.json();
-  if (!data.ok) {
-    throw new Error(`Telegram API: ${data.description || method}`);
-  }
+  if (!data.ok) throw new Error(`Telegram API: ${data.description || method}`);
   return data;
 }
 __name(telegram, "telegram");
@@ -132,7 +122,6 @@ async function reply(env, chat, text, markup = MAIN_MENU) {
   });
 }
 __name(reply, "reply");
-// ... (سيتم استكمال الكود في الجزء التالي)
 async function saveState(db, chat, country, mode) {
   await db.prepare(`INSERT INTO user_search_state (chat_id, country, charging_mode, page_offset, updated_at) VALUES (?, ?, ?, 0, CURRENT_TIMESTAMP) ON CONFLICT(chat_id) DO UPDATE SET country = excluded.country, charging_mode = excluded.charging_mode, page_offset = 0, last_latitude = NULL, last_longitude = NULL, search_active = 0, search_query = NULL, updated_at = CURRENT_TIMESTAMP`).bind(String(chat), country, mode).run();
 }
@@ -236,7 +225,6 @@ function pageMessage(stations, offset, heading) {
   return `${heading}\n\n${content}${notice}`;
 }
 __name(pageMessage, "pageMessage");
-// ... (سيتم استكمال الكود في الجزء الثالث)
 async function ensureTripTable(db) {
   await db.prepare(`CREATE TABLE IF NOT EXISTS trip_planner_state (chat_id TEXT PRIMARY KEY, step TEXT NOT NULL, start_lat REAL, start_lon REAL, start_name TEXT, end_lat REAL, end_lon REAL, end_name TEXT, mode TEXT DEFAULT 'ALL', stage TEXT, battery_percent REAL, battery_capacity REAL, battery_consumption REAL, display_mode TEXT DEFAULT 'ALL', updated_at TEXT DEFAULT CURRENT_TIMESTAMP)`).run();
   const info = await db.prepare("PRAGMA table_info(trip_planner_state)").all();
@@ -293,7 +281,6 @@ function isGccPoint(lat, lon) { return validPoint(lat, lon) && lat >= 16 && lat 
 __name(isGccPoint, "isGccPoint");
 var GCC_COUNTRY_CENTERS = [["\u0642\u0637\u0631|qatar|state of qatar", "\u0642\u0637\u0631 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0627\u0644\u062F\u0648\u062D\u0629)", 25.2854, 51.531], ["\u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629|\u0627\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629|saudi arabia", "\u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0627\u0644\u0631\u064A\u0627\u0636)", 24.7136, 46.6753], ["\u0627\u0644\u0627\u0645\u0627\u0631\u0627\u062A|\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A|\u0627\u0644\u0627\u0645\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0645\u062A\u062D\u062F\u0629|\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0645\u062A\u062D\u062F\u0629|united arab emirates|uae", "\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0623\u0628\u0648\u0638\u0628\u064A)", 24.4539, 54.3773], ["\u0627\u0644\u0643\u0648\u064A\u062A|kuwait", "\u0627\u0644\u0643\u0648\u064A\u062A (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0643\u0648\u064A\u062A)", 29.3759, 47.9774], ["\u0627\u0644\u0628\u062D\u0631\u064A\u0646|bahrain", "\u0627\u0644\u0628\u062D\u0631\u064A\u0646 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0627\u0644\u0645\u0646\u0627\u0645\u0629)", 26.2235, 50.5876], ["\u0639\u0645\u0627\u0646|\u0633\u0644\u0637\u0646\u0629 \u0639\u0645\u0627\u0646|oman", "\u0639\u064F\u0645\u0627\u0646 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0645\u0633\u0642\u0637)", 23.588, 58.3829]];
 var GCC_TRAVEL_LANDMARKS = [["\u0645\u0646\u0641\u0630 \u0627\u0644\u0628\u0637\u062D\u0627\u0621|\u0627\u0644\u0628\u0637\u062D\u0627\u0621|\u0645\u0646\u0641\u0630 \u0627\u0644\u0628\u062D\u0637\u0627\u0621|\u0627\u0644\u0628\u062D\u0637\u0627\u0621|al batha|al batha border crossing|al batha border post|batha border|al bat'ha", "\u0645\u0646\u0641\u0630 \u0627\u0644\u0628\u0637\u062D\u0627\u0621 (\u0645\u0648\u0642\u0639 \u062A\u0642\u0631\u064A\u0628\u064A)", 24.122764, 51.58176], ["\u0645\u0646\u0641\u0630 \u0627\u0644\u063A\u0648\u064A\u0641\u0627\u062A|\u0627\u0644\u063A\u0648\u064A\u0641\u0627\u062A|al ghuwaifat|al ghuwaifat border post|al ghuwaifat border crossing|ghuwaifat|al ghuweifat", "\u0645\u0646\u0641\u0630 \u0627\u0644\u063A\u0648\u064A\u0641\u0627\u062A (\u0645\u0648\u0642\u0639 \u062A\u0642\u0631\u064A\u0628\u064A)", 24.1281, 51.61801], ["\u0645\u0637\u0627\u0631 \u0627\u0644\u0645\u0644\u0643 \u0641\u0647\u062F|\u0645\u0637\u0627\u0631 \u0627\u0644\u0645\u0644\u0643 \u0641\u0647\u062F \u0627\u0644\u062F\u0648\u0644\u064A|king fahd international airport|king fahd airport|dammam airport|oedf|dmm airport", "\u0645\u0637\u0627\u0631 \u0627\u0644\u0645\u0644\u0643 \u0641\u0647\u062F \u0627\u0644\u062F\u0648\u0644\u064A (\u0645\u0631\u0643\u0632 \u0627\u0644\u0645\u0637\u0627\u0631 \u0627\u0644\u062A\u0642\u0631\u064A\u0628\u064A)", 26.471194, 49.798583]];
-// ... (سيتم استكمال الكود في الجزء الرابع)
 async function findCityPoint(db, name, env) {
   const key = normalizeSearch(name);
   if (key.length < 2) return { error: "اكتب اسم مدينة من حرفين على الأقل." };
@@ -361,8 +348,13 @@ async function reserveRouteQuota(db, chat) {
     const reservationId = new Date().toISOString();
     const trial = await db.prepare(`INSERT INTO route_free_trials (telegram_user_id, status, created_at) VALUES (?, 'RESERVED', ?) ON CONFLICT(telegram_user_id) DO UPDATE SET status='RESERVED', created_at=excluded.created_at, used_at=NULL WHERE route_free_trials.status='RESERVED' AND datetime(route_free_trials.created_at) < datetime('now', '-15 minutes') RETURNING telegram_user_id`).bind(chatId, reservationId).first();
     if (!trial) {
+      const current = await db.prepare("SELECT status FROM route_free_t
+  if (!validPaid && !isOwnerVipPlus) {
+    const reservationId = new Date().toISOString();
+    const trial = await db.prepare(`INSERT INTO route_free_trials (telegram_user_id, status, created_at) VALUES (?, 'RESERVED', ?) ON CONFLICT(telegram_user_id) DO UPDATE SET status='RESERVED', created_at=excluded.created_at, used_at=NULL WHERE route_free_trials.status='RESERVED' AND datetime(route_free_trials.created_at) < datetime('now', '-15 minutes') RETURNING telegram_user_id`).bind(chatId, reservationId).first();
+    if (!trial) {
       const current = await db.prepare("SELECT status FROM route_free_trials WHERE telegram_user_id=?").bind(chatId).first();
-      if (current?.status === "RESERVED") return { ok: false, message: "⏳ توجد محاولة تخطيط قيد التنفيذ. انتظر قليلًا ثم أعد المحاولة. إذا توقفت المحاولة، تُتاح إعادة المحاولة تلقائيًا بعد 15 دقيقة." };
+      if (current?.status === "RESERVED") return { ok: false, message: "⏳ توجد محاولة تخطيط قيد التنفيذ. انتظر قليلاً ثم أعد المحاولة. إذا توقفت المحاولة، تُتاح إعادة المحاولة تلقائياً بعد 15 دقيقة." };
       return { ok: false, message: "🔒 استخدمت تجربتك المجانية لتخطيط الرحلة سابقًا. التجربة متاحة مرة واحدة فقط لكل حساب، ويمكنك الاشتراك لتخطيط رحلات إضافية.\n\n⚡ البحث عن محطات الشحن متاح مجانًا." };
     }
     const release = async () => { await db.prepare("DELETE FROM route_free_trials WHERE telegram_user_id=? AND status='RESERVED' AND created_at=?").bind(chatId, reservationId).run(); };
@@ -460,7 +452,6 @@ async function clearTripResults(db, chat) {
   await db.prepare("DELETE FROM trip_planner_results WHERE chat_id = ?").bind(String(chat)).run();
 }
 __name(clearTripResults, "clearTripResults");
-// ... (سيتم استكمال الكود في الجزء الخامس)
 async function showTripPage(env, chat, offset = 0) {
   await ensureTripResultsTable(env.DB);
   const result = await env.DB.prepare("SELECT station_ids FROM trip_planner_results WHERE chat_id = ?").bind(String(chat)).first();
@@ -586,7 +577,6 @@ async function handleTripText(env, chat, text, trip) {
 }
 __name(handleTripText, "handleTripText");
 
-// V5.19.2 - referral rewards
 const REWARD_COSTS = { SILVER: 15, GOLD: 35, VIP: 80 };
 const REWARD_LABEL = "🎁 نقاطي ودعواتي";
 async function rewardSchema(db) {
@@ -651,34 +641,49 @@ async function rewardQualify(env,message) {
   ]);
   if(held)await env.DB.prepare("INSERT OR IGNORE INTO reward_flags(user_id,reason) VALUES(?,'More than 20 referrals within an hour')").bind(row.inviter_id).run();
 }
-  // النص الجاهز للنسخ (بنفس التنسيق الجميل)
+async function rewardHome(env,user) {
+  await rewardSchema(env.DB);
+  const uid=String(user), points=await rewardBalance(env.DB,uid);
+  const invites=await env.DB.prepare('SELECT COUNT(*) AS n FROM reward_users WHERE inviter_id=? AND qualified_at IS NOT NULL').bind(uid).first();
+  const held=await env.DB.prepare("SELECT COALESCE(SUM(remaining),0) AS n FROM reward_credits WHERE user_id=? AND status='HELD' AND expires_at>CURRENT_TIMESTAMP").bind(uid).first();
+  const queued=await env.DB.prepare("SELECT plan FROM reward_redemptions WHERE user_id=? AND status='QUEUED' ORDER BY id DESC LIMIT 1").bind(uid).first();
+  const inviteLink = `https://t.me/GCC_EV_Chargers_bot?start=ref_${uid}`;
   const shareText = `⚡ مرحباً! أنصحك بتجربة بوت "دليل شواحن السيارات الكهربائية بالخليج" 📍\n\nبوت يسهل عليك إيجاد أقرب محطات الشحن وتخطيط رحلاتك بذكاء.\n\n🎁 استخدم رابط الدعوة الخاص بي للانضمام:\n${inviteLink}`;
-  
-  // النص المشفر لزر المشاركة
-  const encodedShareText = encodeURIComponent(shareText);
-  
   await reply(env,user,
     `🎁 نقاطي ودعواتي\n\n💰 النقاط المتاحة: ${points}\n👥 الدعوات المؤهلة: ${Number(invites?.n||0)}\n⏳ نقاط قيد المراجعة: ${Number(held?.n||0)}\n📌 عضوية محجوزة: ${queued?.plan||'لا يوجد'}\n\n🔗 رابط دعوتك:\n${inviteLink}\n\nكل دعوة جديدة مؤهلة = نقطة واحدة. النقاط تنتهي بعد 12 شهرًا من اكتسابها.`, 
     { 
       inline_keyboard: [
-        [{ text: "📤 مشاركة الرابط مع صديق", url: `https://t.me/share/url?url=${inviteLink}&text=${encodedShareText}` }],
-        [{ text: "📋 نسخ رسالة الدعوة", copy_text: { text: shareText } }], // <--- الزر الجديد للنسخ
+        [{ text: "📋 نسخ رسالة الدعوة", copy_text: { text: shareText } }],
         [{ text: '🥈 الفضية — 15 نقطة',callback_data:'reward_choose:SILVER'},{text:'🥇 الذهبية — 35 نقطة',callback_data:'reward_choose:GOLD'}],
         [{ text: '💎 VIP — 80 نقطة',callback_data:'reward_choose:VIP'},{text:'📋 سجل مكافآتي',callback_data:'reward_history'}]
       ] 
     }
   );
-
-  await reply(env,user,
-    `🎁 نقاطي ودعواتي\n\n💰 النقاط المتاحة: ${points}\n👥 الدعوات المؤهلة: ${Number(invites?.n||0)}\n⏳ نقاط قيد المراجعة: ${Number(held?.n||0)}\n📌 عضوية محجوزة: ${queued?.plan||'لا يوجد'}\n\n🔗 رابط دعوتك:\n${inviteLink}\n\nكل دعوة جديدة مؤهلة = نقطة واحدة. النقاط تنتهي بعد 12 شهرًا من اكتسابها.`, 
-    { 
-      inline_keyboard: [
-        [{ text: "📤 مشاركة الرابط مع صديق", url: `https://t.me/share/url?url=${inviteLink}&text=${shareText}` }],
-        [{ text: '🥈 الفضية — 15 نقطة',callback_data:'reward_choose:SILVER'},{text:'🥇 الذهبية — 35 نقطة',callback_data:'reward_choose:GOLD'}],
-        [{ text: '💎 VIP — 80 نقطة',callback_data:'reward_choose:VIP'},{text:'📋 سجل مكافآتي',callback_data:'reward_history'}]
-      ] 
-    }
-  );
+}
+async function rewardPreview(env,callback,plan) {
+  if(callback.message?.chat?.type!=='private'||String(callback.message.chat.id)!==String(callback.from.id))return;
+  const user=String(callback.from.id), cost=REWARD_COSTS[plan];
+  if(!cost)return;
+  const points=await rewardBalance(env.DB,user);
+  await reply(env,user,`🎁 تأكيد استبدال العضوية ${plan}\n\nالمطلوب: ${cost} نقطة\nرصيدك: ${points} نقطة\nالمدة: 30 يومًا\nالرحلات: ${PLANS[plan].routes}\n\n⚠️ الاستبدال نهائي ولا يمكن إلغاؤه. إذا كان اشتراكك نشطًا، تُحجز العضوية حتى انتهائه.`,{inline_keyboard:[[{text:'✅ تأكيد الاستبدال النهائي',callback_data:`reward_confirm:${plan}`}],[{text:'↩️ إلغاء قبل الخصم',callback_data:'reward_home'}]]});
+}
+async function rewardRedeem(env,callback,plan) {
+  if(callback.message?.chat?.type!=='private'||String(callback.message.chat.id)!==String(callback.from.id))return;
+  const user=String(callback.from.id),cost=REWARD_COSTS[plan];if(!cost)return;
+  await rewardSchema(env.DB);
+  const current=await env.DB.prepare('SELECT plan,expires_at FROM subscriptions WHERE telegram_user_id=?').bind(user).first();
+  if(current?.plan==='VIP_PLUS'){ await reply(env,user,'⛔ عضوية VIP_PLUS محمية ولا يمكن استبدال النقاط عليها.'); return; }
+  const active=!!(current && Date.parse(current.expires_at||'')>Date.now() && (PLANS[current.plan]||current.plan==='VIP_PLUS'));
+  const start=active?new Date(current.expires_at).toISOString():rewardTime();
+  const end=new Date(Date.parse(start)+30*86400000).toISOString();
+  try {
+    const tasks=[env.DB.prepare(`INSERT INTO reward_redemptions(user_id,plan,cost,status,starts_at,ends_at,activated_at) VALUES(?,?,?,?,?,?,?)`).bind(user,plan,cost,active?'QUEUED':'ACTIVE',start,end,active?null:start)];
+    if(!active)tasks.push(env.DB.prepare(`INSERT INTO subscriptions(telegram_user_id,plan,daily_route_limit,started_at,expires_at,updated_at) VALUES(?,?,?,CURRENT_TIMESTAMP,?,CURRENT_TIMESTAMP) ON CONFLICT(telegram_user_id) DO UPDATE SET plan=excluded.plan,daily_route_limit=excluded.daily_route_limit,started_at=excluded.started_at,expires_at=excluded.expires_at,updated_at=CURRENT_TIMESTAMP WHERE subscriptions.expires_at IS NULL OR datetime(subscriptions.expires_at)<=datetime('now')`).bind(user,plan,PLANS[plan].routes,end));
+    tasks.push(env.DB.prepare('INSERT INTO reward_audit(actor_id,user_id,action,detail) VALUES(?,?,?,?)').bind(user,user,'REDEEM',`${plan}: ${cost}`));
+    await env.DB.batch(tasks);
+    await reply(env,user,active?`✅ تم حجز عضوية ${plan} بعد انتهاء اشتراكك الحالي. خُصم ${cost} نقطة.`:`✅ تم تفعيل عضوية ${plan} لمدة 30 يومًا. خُصم ${cost} نقطة.`);
+  }catch(error){console.error('REWARD_REDEEM_REJECTED',String(error));await reply(env,user,'⚠️ لم يتم الاستبدال. تحقق من الرصيد وشرط 30 يومًا والعضوية المحجوزة، ثم حاول مجددًا.');}
+}
 async function rewardActivateQueued(env,user) {
   await rewardSchema(env.DB);
   const uid=String(user);
@@ -937,7 +942,6 @@ __name(batteryHandleText, "batteryHandleText");
 const BOT_RELEASE_VERSION = "5.19.4";
 const BOT_RELEASE_MESSAGE = ["🆕 تحديث جديد لبوت محطات شحن الخليج", "", "⚡ تم تحديث القائمة الرئيسية لتسهيل الوصول للخدمات:", "", "🗺️ تخطيط الرحلة", "📍 أقرب محطة", "🔋 نوع الشاحن", "🌍 البحث عن محطة", "🛠️ الخدمات والبلاغات", "🎁 نقاطي ودعواتي", "", "✅ القائمة الجديدة جاهزة للاستخدام.", "لا تحتاج إلى كتابة /start."].join("\n");
 async function notifyReleaseOnce(env, message) {
-  // 1. البث التلقائي (يحدث في الخلفية عند تشغيل Cron)
   if (!message) {
     if (!env.DB || !env.BOT_TOKEN) return;
     const users = await env.DB.prepare("SELECT chat_id FROM bot_release_notices WHERE release_version != ?").bind(BOT_RELEASE_VERSION).all();
@@ -949,25 +953,13 @@ async function notifyReleaseOnce(env, message) {
     }
     return;
   }
-
-  // 2. الإشعار الفوري (عندما يرسل المستخدم رسالة)
   if (message.chat?.type !== "private") return;
   const chatId = String(message.chat.id);
   try {
-    const claim = await env.DB.prepare(`
-      INSERT INTO bot_release_notices (chat_id, release_version) VALUES (?, ?)
-      ON CONFLICT(chat_id, release_version) DO NOTHING
-    `).bind(chatId, BOT_RELEASE_VERSION).run();
+    const claim = await env.DB.prepare(`INSERT INTO bot_release_notices (chat_id, release_version) VALUES (?, ?) ON CONFLICT(chat_id, release_version) DO NOTHING`).bind(chatId, BOT_RELEASE_VERSION).run();
     if (Number(claim.meta?.changes ?? 0) !== 1) return;
-  } catch (error) {
-    console.error("Release notification database error:", error);
-    return;
-  }
-  try {
-    await reply(env, message.chat.id, BOT_RELEASE_MESSAGE, MAIN_MENU);
-  } catch (error) {
-    console.error("Release notification delivery error:", error);
-  }
+  } catch (error) { console.error("Release notification database error:", error); return; }
+  try { await reply(env, message.chat.id, BOT_RELEASE_MESSAGE, MAIN_MENU); } catch (error) { console.error("Release notification delivery error:", error); }
 }
 async function handleMessage(env, message) {
   const chat = message.chat.id;
@@ -982,8 +974,8 @@ async function handleMessage(env, message) {
   if(await rewardAdmin(env,message))return;
   if(text===REWARD_LABEL || text==='/rewards') {await rewardHome(env,message.from.id);return;}
   await notifyReleaseOnce(env, message);
-    const v518NavigationButtons = ["🔋 نوع الشاحن","🌍 البحث عن محطة","🛠️ الخدمات والبلاغات","🌍 البحث حسب الدولة","🔍 البحث عن محطة","⚡ شحن سريع DC","🔌 شحن عادي AC","🔋 جميع أنواع الشحن","📢 تحديثات واتساب","💎 عضويتي والاشتراكات","➕ إضافة محطة جديدة","🛠️ الإبلاغ عن مشكلة","📍 أقرب محطة", "🎁 نقاطي ودعواتي"];
-    if (v518NavigationButtons.includes(text)) {
+  const v518NavigationButtons = ["🔋 نوع الشاحن","🌍 البحث عن محطة","🛠️ الخدمات والبلاغات","🌍 البحث حسب الدولة","🔍 البحث عن محطة","⚡ شحن سريع DC","🔌 شحن عادي AC","🔋 جميع أنواع الشحن","📢 تحديثات واتساب","💎 عضويتي والاشتراكات","➕ إضافة محطة جديدة","🛠️ الإبلاغ عن مشكلة","📍 أقرب محطة", "🎁 نقاطي ودعواتي"];
+  if (v518NavigationButtons.includes(text)) {
     await clearTrip(env.DB, chat);
     await batteryEnsureTables(env.DB);
     await env.DB.prepare("DELETE FROM battery_calculator_state WHERE chat_id = ?").bind(String(chat)).run();
@@ -1104,8 +1096,7 @@ async function handleMoreStations(env, callback) {
   if (state.last_latitude == null || state.last_longitude == null) { await reply(env, chat, "📍 أرسل موقعك أولًا لعرض المزيد من المحطات."); return; }
   const currentOffset = Number(state.page_offset || 0);
   if (requestedOffset !== currentOffset + 3) { await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: callback.id, text: "هذه صفحة قديمة. استخدم زر عرض المزيد في أحدث النتائج.", show_alert: false }); return; }
-  const page = await findPage(env.DB, Number(state.last_latitude), Number(state
-    .last_longitude), state, requestedOffset);
+  const page = await findPage(env.DB, Number(state.last_latitude), Number(state.last_longitude), state, requestedOffset);
   if (!page.stations.length) {
     await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: callback.id, text: "وصلت إلى آخر محطة متاحة." });
     return;
@@ -1145,7 +1136,7 @@ var GeoRateLimiter = class extends DurableObject {
 var GCC_EV_Chargers_V5_12_default = {
   async scheduled(event, env, ctx) {
     const task = async () => {
-            await notifyReleaseOnce(env, null);
+      await notifyReleaseOnce(env, null);
       await rewardSchema(env.DB);
       const queued = await env.DB.prepare("SELECT user_id FROM reward_redemptions WHERE status='QUEUED' ORDER BY id LIMIT 100").all();
       for (const row of queued.results || []) {

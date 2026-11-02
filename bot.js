@@ -348,13 +348,8 @@ async function reserveRouteQuota(db, chat) {
     const reservationId = new Date().toISOString();
     const trial = await db.prepare(`INSERT INTO route_free_trials (telegram_user_id, status, created_at) VALUES (?, 'RESERVED', ?) ON CONFLICT(telegram_user_id) DO UPDATE SET status='RESERVED', created_at=excluded.created_at, used_at=NULL WHERE route_free_trials.status='RESERVED' AND datetime(route_free_trials.created_at) < datetime('now', '-15 minutes') RETURNING telegram_user_id`).bind(chatId, reservationId).first();
     if (!trial) {
-      const current = await db.prepare("SELECT status FROM route_free_t
-  if (!validPaid && !isOwnerVipPlus) {
-    const reservationId = new Date().toISOString();
-    const trial = await db.prepare(`INSERT INTO route_free_trials (telegram_user_id, status, created_at) VALUES (?, 'RESERVED', ?) ON CONFLICT(telegram_user_id) DO UPDATE SET status='RESERVED', created_at=excluded.created_at, used_at=NULL WHERE route_free_trials.status='RESERVED' AND datetime(route_free_trials.created_at) < datetime('now', '-15 minutes') RETURNING telegram_user_id`).bind(chatId, reservationId).first();
-    if (!trial) {
       const current = await db.prepare("SELECT status FROM route_free_trials WHERE telegram_user_id=?").bind(chatId).first();
-      if (current?.status === "RESERVED") return { ok: false, message: "⏳ توجد محاولة تخطيط قيد التنفيذ. انتظر قليلاً ثم أعد المحاولة. إذا توقفت المحاولة، تُتاح إعادة المحاولة تلقائياً بعد 15 دقيقة." };
+      if (current?.status === "RESERVED") return { ok: false, message: "⏳ توجد محاولة تخطيط قيد التنفيذ. انتظر قليلًا ثم أعد المحاولة. إذا توقفت المحاولة، تُتاح إعادة المحاولة تلقائيًا بعد 15 دقيقة." };
       return { ok: false, message: "🔒 استخدمت تجربتك المجانية لتخطيط الرحلة سابقًا. التجربة متاحة مرة واحدة فقط لكل حساب، ويمكنك الاشتراك لتخطيط رحلات إضافية.\n\n⚡ البحث عن محطات الشحن متاح مجانًا." };
     }
     const release = async () => { await db.prepare("DELETE FROM route_free_trials WHERE telegram_user_id=? AND status='RESERVED' AND created_at=?").bind(chatId, reservationId).run(); };
@@ -576,7 +571,6 @@ async function handleTripText(env, chat, text, trip) {
   await reply(env, chat, pointPrompt(trip.step.startsWith("start")), TRIP_POINT_MENU);
 }
 __name(handleTripText, "handleTripText");
-
 const REWARD_COSTS = { SILVER: 15, GOLD: 35, VIP: 80 };
 const REWARD_LABEL = "🎁 نقاطي ودعواتي";
 async function rewardSchema(db) {

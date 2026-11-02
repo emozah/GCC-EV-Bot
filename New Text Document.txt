@@ -1,0 +1,2779 @@
+// @ts-nocheck
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// GCC_EV_Chargers_V5_19_1_Fixed.js
+import { DurableObject } from "cloudflare:workers";
+var __defProp2 = Object.defineProperty;
+var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
+var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScFydrFp3aOtv_DQ2J-SFETbCWh_RxYQYiivj7drfUe8ni0vA/viewform?usp=header";
+var COUNTRIES = {
+  "\u{1F1F8}\u{1F1E6} \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629": "\u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629",
+  "\u{1F1E6}\u{1F1EA} \u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A": "\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A",
+  "\u{1F1F6}\u{1F1E6} \u0642\u0637\u0631": "\u0642\u0637\u0631",
+  "\u{1F1F0}\u{1F1FC} \u0627\u0644\u0643\u0648\u064A\u062A": "\u0627\u0644\u0643\u0648\u064A\u062A",
+  "\u{1F1E7}\u{1F1ED} \u0627\u0644\u0628\u062D\u0631\u064A\u0646": "\u0627\u0644\u0628\u062D\u0631\u064A\u0646",
+  "\u{1F1F4}\u{1F1F2} \u0639\u064F\u0645\u0627\u0646": "\u0639\u0645\u0627\u0646"
+};
+var MAIN_MENU = {
+  keyboard: [
+    [
+      { text: "\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0629" },
+      { text: "\u{1F4CD} \u0623\u0642\u0631\u0628 \u0645\u062D\u0637\u0629", request_location: true }
+    ],
+    [
+      { text: "\u{1F50B} \u0646\u0648\u0639 \u0627\u0644\u0634\u0627\u062D\u0646" },
+      { text: "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629" }
+    ],
+    [
+      { text: "\u{1F6E0}\uFE0F \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0648\u0627\u0644\u0628\u0644\u0627\u063A\u0627\u062A" }
+    ]
+  ],
+  resize_keyboard: true,
+  is_persistent: true
+};
+var CHARGER_TYPE_MENU = {
+  keyboard: [
+    [{ text: "\u26A1 \u0634\u062D\u0646 \u0633\u0631\u064A\u0639 DC" }, { text: "\u{1F50C} \u0634\u062D\u0646 \u0639\u0627\u062F\u064A AC" }],
+    [{ text: "\u{1F50B} \u062C\u0645\u064A\u0639 \u0623\u0646\u0648\u0627\u0639 \u0627\u0644\u0634\u062D\u0646" }],
+    [{ text: "\u{1F4CD} \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0648\u0642\u0639\u064A", request_location: true }],
+    [{ text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }]
+  ],
+  resize_keyboard: true,
+  is_persistent: true
+};
+var SEARCH_MENU = {
+  keyboard: [
+    [{ text: "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u062D\u0633\u0628 \u0627\u0644\u062F\u0648\u0644\u0629" }],
+    [{ text: "\u{1F50D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629" }],
+    [{ text: "\u{1F4CD} \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0648\u0642\u0639\u064A", request_location: true }],
+    [{ text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }]
+  ],
+  resize_keyboard: true,
+  is_persistent: true
+};
+var SERVICES_MENU = {
+  keyboard: [
+    [{ text: "\u2795 \u0625\u0636\u0627\u0641\u0629 \u0645\u062D\u0637\u0629 \u062C\u062F\u064A\u062F\u0629" }, { text: "\u{1F6E0}\uFE0F \u0627\u0644\u0625\u0628\u0644\u0627\u063A \u0639\u0646 \u0645\u0634\u0643\u0644\u0629" }],
+    [{ text: "\u{1F48E} \u0639\u0636\u0648\u064A\u062A\u064A \u0648\u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643\u0627\u062A" }],
+    [{ text: "\u{1F4E2} \u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0648\u0627\u062A\u0633\u0627\u0628" }],
+    [{ text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }]
+  ],
+  resize_keyboard: true,
+  is_persistent: true
+};
+var WHATSAPP_UPDATES_URL = "https://chat.whatsapp.com/HK2uJncoGhrCUIPHgcZ5tA?s=cl&p=a&mlu=4&ilr=4&iam=2";
+var TRIP_POINT_MENU = {
+  keyboard: [
+    [{ text: "\u{1F4CD} \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u0648\u0642\u0639", request_location: true }, { text: "\u{1F50D} \u0643\u062A\u0627\u0628\u0629 \u0627\u0633\u0645 \u0627\u0644\u0645\u062F\u064A\u0646\u0629" }],
+    [{ text: "\u{1F519} \u0631\u062C\u0648\u0639" }, { text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }]
+  ],
+  resize_keyboard: true,
+  is_persistent: true
+};
+var TRIP_MODE_MENU = {
+  keyboard: [
+    [{ text: "\u26A1 \u0634\u062D\u0646 \u0633\u0631\u064A\u0639 DC \u0641\u0642\u0637" }],
+    [{ text: "\u{1F50C} \u0634\u062D\u0646 \u0639\u0627\u062F\u064A AC \u0641\u0642\u0637" }],
+    [{ text: "\u{1F50B} \u062C\u0645\u064A\u0639 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646" }],
+    [{ text: "\u{1F519} \u0631\u062C\u0648\u0639" }, { text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }]
+  ],
+  resize_keyboard: true,
+  is_persistent: true
+};
+var TRIP_DISPLAY_MENU = { keyboard: [[{ text: "\u{1F3AF} \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u062D\u0633\u0628 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629" }], [{ text: "\u26A1 \u062C\u0645\u064A\u0639 \u0627\u0644\u0645\u062D\u0637\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u0637\u0631\u064A\u0642" }], [{ text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }]], resize_keyboard: true, is_persistent: true };
+function tripBatterySummary(trip, km) {
+  const pct = Number(trip.battery_percent), cap = Number(trip.battery_capacity), use = Number(trip.battery_consumption);
+  if (!(pct > 0 && pct <= 100 && cap >= 5 && cap <= 250 && use >= 5 && use <= 80)) return null;
+  const perKm = use / cap, finish = pct - km * perKm, target = pct / 2, targetKm = (pct - target) / perKm, reserveKm = (pct - 20) / perKm;
+  return { pct, cap, use, finish, target, targetKm, reserveKm, perKm, km };
+}
+__name(tripBatterySummary, "tripBatterySummary");
+function tripDisplayItems(data) {
+  const items = Array.isArray(data) ? data : data.items || [];
+  if (Array.isArray(data) || data.view !== "BATTERY" || !data.battery) {
+    return items;
+  }
+  const b = data.battery;
+  if (b.finish >= 20) return [];
+  const eligible = items.filter((item) => Number.isFinite(Number(item.km))).map((item) => {
+    const distance = Number(item.km);
+    const estimatedBattery = b.pct - distance * b.perKm;
+    return {
+      ...item,
+      estimatedBattery,
+      distanceFromStart: distance
+    };
+  }).filter(
+    (item) => item.estimatedBattery >= 20 && item.distanceFromStart >= 0
+  );
+  return eligible.sort((a, c) => {
+    const scoreA = Math.abs(a.distanceFromStart - b.targetKm);
+    const scoreC = Math.abs(c.distanceFromStart - b.targetKm);
+    return scoreA - scoreC || a.distanceFromStart - c.distanceFromStart;
+  });
+}
+__name(tripDisplayItems, "tripDisplayItems");
+var COUNTRY_MENU = {
+  keyboard: [
+    [
+      { text: "\u{1F1F8}\u{1F1E6} \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629" },
+      { text: "\u{1F1E6}\u{1F1EA} \u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A" }
+    ],
+    [
+      { text: "\u{1F1F6}\u{1F1E6} \u0642\u0637\u0631" },
+      { text: "\u{1F1F0}\u{1F1FC} \u0627\u0644\u0643\u0648\u064A\u062A" }
+    ],
+    [
+      { text: "\u{1F1E7}\u{1F1ED} \u0627\u0644\u0628\u062D\u0631\u064A\u0646" },
+      { text: "\u{1F1F4}\u{1F1F2} \u0639\u064F\u0645\u0627\u0646" }
+    ],
+    [
+      { text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }
+    ],
+    [
+      {
+        text: "\u{1F4CD} \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0648\u0642\u0639\u064A",
+        request_location: true
+      }
+    ]
+  ],
+  resize_keyboard: true,
+  is_persistent: true
+};
+async function telegram(token, method, payload) {
+  const response = await fetch(
+    `https://api.telegram.org/bot${token}/${method}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    }
+  );
+  if (!response.ok) {
+    const errorBody = await response.text();
+    throw new Error(
+      `Telegram HTTP ${response.status}: ${errorBody}`
+    );
+  }
+  const data = await response.json();
+  if (!data.ok) {
+    throw new Error(
+      `Telegram API: ${data.description || method}`
+    );
+  }
+  return data;
+}
+__name(telegram, "telegram");
+__name2(telegram, "telegram");
+async function reply(env, chat, text, markup = (
+  /** @type {any} */
+  MAIN_MENU
+)) {
+  return telegram(
+    env.BOT_TOKEN,
+    "sendMessage",
+    {
+      chat_id: chat,
+      text,
+      reply_markup: markup,
+      disable_web_page_preview: true
+    }
+  );
+}
+__name(reply, "reply");
+__name2(reply, "reply");
+async function saveState(db, chat, country, mode) {
+  await db.prepare(`
+
+    INSERT INTO user_search_state
+
+      (
+
+        chat_id,
+
+        country,
+
+        charging_mode,
+
+        page_offset,
+
+        updated_at
+
+      )
+
+    VALUES (?, ?, ?, 0, CURRENT_TIMESTAMP)
+
+    ON CONFLICT(chat_id) DO UPDATE SET
+
+      country = excluded.country,
+
+      charging_mode = excluded.charging_mode,
+
+      page_offset = 0,
+
+      last_latitude = NULL,
+
+      last_longitude = NULL,
+
+      search_active = 0,
+
+      search_query = NULL,
+
+      updated_at = CURRENT_TIMESTAMP
+
+  `).bind(
+    String(chat),
+    country,
+    mode
+  ).run();
+}
+__name(saveState, "saveState");
+__name2(saveState, "saveState");
+async function getState(db, chat) {
+  return await db.prepare(`
+
+      SELECT
+
+        country,
+
+        charging_mode,
+
+        last_latitude,
+
+        last_longitude,
+
+        page_offset
+
+      FROM user_search_state
+
+      WHERE chat_id = ?
+
+    `).bind(String(chat)).first() || {
+    country: null,
+    charging_mode: "ALL",
+    last_latitude: null,
+    last_longitude: null,
+    page_offset: 0
+  };
+}
+__name(getState, "getState");
+__name2(getState, "getState");
+async function saveUserLocation(db, chat, lat, lon) {
+  await db.prepare(`
+
+    INSERT INTO user_search_state
+
+      (
+
+        chat_id,
+
+        last_latitude,
+
+        last_longitude,
+
+        page_offset
+
+      )
+
+    VALUES (?, ?, ?, 0)
+
+    ON CONFLICT(chat_id) DO UPDATE SET
+
+      last_latitude = excluded.last_latitude,
+
+      last_longitude = excluded.last_longitude,
+
+      page_offset = 0,
+
+      search_active = 0,
+
+      search_query = NULL,
+
+      updated_at = CURRENT_TIMESTAMP
+
+  `).bind(
+    String(chat),
+    lat,
+    lon
+  ).run();
+}
+__name(saveUserLocation, "saveUserLocation");
+__name2(saveUserLocation, "saveUserLocation");
+function distanceKm(lat1, lon1, lat2, lon2) {
+  const rad = /* @__PURE__ */ __name2((value) => value * Math.PI / 180, "rad");
+  const a = Math.sin(rad(lat2 - lat1) / 2) ** 2 + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(rad(lon2 - lon1) / 2) ** 2;
+  return 6371 * 2 * Math.atan2(
+    Math.sqrt(a),
+    Math.sqrt(Math.max(0, 1 - a))
+  );
+}
+__name(distanceKm, "distanceKm");
+__name2(distanceKm, "distanceKm");
+function matchesMode(station, mode) {
+  if (mode === "ALL") {
+    return true;
+  }
+  const type = String(
+    station.charger_type || ""
+  ).toLowerCase();
+  if (mode === "DC") {
+    return /dc|سريع|fast/.test(type);
+  }
+  if (mode === "AC") {
+    return /ac|عادي|normal|slow/.test(type) && !/dc|سريع|fast/.test(type);
+  }
+  return false;
+}
+__name(matchesMode, "matchesMode");
+__name2(matchesMode, "matchesMode");
+function isEligible(station) {
+  const status = String(
+    station.status || ""
+  ).toLowerCase();
+  if (/تحت الإنشاء|قيد الإنشاء|under construction|planned|مخطط/.test(status)) {
+    return false;
+  }
+  if (/معطل|متوقف عن العمل|out of service|permanently closed/.test(status)) {
+    return false;
+  }
+  const lat = Number(station.latitude);
+  const lon = Number(station.longitude);
+  return station.latitude !== null && station.longitude !== null && station.latitude !== "" && station.longitude !== "" && Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+}
+__name(isEligible, "isEligible");
+__name2(isEligible, "isEligible");
+async function findPage(db, lat, lon, state, offset = 0) {
+  const query = state.country ? db.prepare(
+    "SELECT * FROM stations WHERE country = ?"
+  ).bind(state.country) : db.prepare(
+    "SELECT * FROM stations"
+  );
+  const data = await query.all();
+  const ordered = (data.results || []).filter(
+    (s) => matchesMode(s, state.charging_mode)
+  ).filter(isEligible).map((s) => ({
+    ...s,
+    km: distanceKm(
+      lat,
+      lon,
+      Number(s.latitude),
+      Number(s.longitude)
+    )
+  })).sort((a, b) => a.km - b.km);
+  const selected = ordered.slice(
+    offset,
+    offset + 4
+  );
+  return {
+    stations: selected.slice(0, 3),
+    hasMore: selected.length > 3
+  };
+}
+__name(findPage, "findPage");
+__name2(findPage, "findPage");
+function normalizeSearch(value) {
+  return String(value ?? "").toLowerCase().normalize("NFKC").replace(/[\u064B-\u065F\u0670]/g, "").replace(/[أإآٱ]/g, "\u0627").replace(/ى/g, "\u064A").replace(/ة/g, "\u0647").replace(/ـ/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+}
+__name(normalizeSearch, "normalizeSearch");
+__name2(normalizeSearch, "normalizeSearch");
+async function searchStations(db, searchText, offset = 0) {
+  const keyword = normalizeSearch(
+    String(searchText || "").slice(0, 100)
+  );
+  if (!keyword) {
+    return {
+      stations: [],
+      hasMore: false
+    };
+  }
+  const data = await db.prepare(
+    "SELECT * FROM stations"
+  ).all();
+  const terms = keyword.split(/\s+/).filter(Boolean);
+  const matched = (data.results || []).filter(isEligible).filter((station) => {
+    const fields = [
+      station.id,
+      station.station_id,
+      station.station_number,
+      station.name,
+      station.operator,
+      station.country,
+      station.description,
+      station.city,
+      station.address
+    ];
+    const searchableText = normalizeSearch(
+      fields.filter((value) => value != null).join(" ")
+    );
+    return terms.every(
+      (term) => searchableText.includes(term)
+    );
+  });
+  matched.sort((a, b) => {
+    const exactMatch = /* @__PURE__ */ __name2((station) => normalizeSearch(station.id) === keyword || normalizeSearch(station.station_id) === keyword || normalizeSearch(station.station_number) === keyword, "exactMatch");
+    return Number(exactMatch(b)) - Number(exactMatch(a)) || String(a.name || "").localeCompare(
+      String(b.name || ""),
+      "ar"
+    );
+  });
+  const selected = matched.slice(
+    offset,
+    offset + 4
+  );
+  return {
+    stations: selected.slice(0, 3),
+    hasMore: selected.length > 3
+  };
+}
+__name(searchStations, "searchStations");
+__name2(searchStations, "searchStations");
+function stationText(s, index) {
+  const display = /* @__PURE__ */ __name2((value) => {
+    const text = String(value ?? "").trim();
+    if (!text || /^(null|undefined|nan|n\/a|unknown)$/i.test(text)) {
+      return "\u063A\u064A\u0631 \u0645\u0639\u0631\u0648\u0641";
+    }
+    return text;
+  }, "display");
+  return [
+    `${index + 1}. \u26A1 ${display(s.name)}`,
+    `\u200F\u{1F194} \u0645\u0639\u0631\u0651\u0641 \u0627\u0644\u0645\u062D\u0637\u0629: ${display(s.station_id ?? s.id)}\u200F`,
+    `\u{1F30D} \u0627\u0644\u062F\u0648\u0644\u0629: ${display(s.country)}`,
+    `\u{1F3E2} \u0627\u0644\u0645\u0634\u063A\u0651\u0644: ${display(s.operator)}`,
+    `\u{1F50C} \u0646\u0648\u0639 \u0627\u0644\u0634\u062D\u0646: ${display(s.charger_type)}`,
+    `\u26A1 \u0627\u0644\u0642\u062F\u0631\u0629: ${display(s.power_kw)}`,
+    `\u{1F50B} \u0646\u0648\u0639 \u0627\u0644\u0645\u0648\u0635\u0644: ${display(s.connector)}`,
+    `\u{1F9F5} \u062A\u0648\u0641\u0631 \u0627\u0644\u0643\u064A\u0628\u0644: ${display(s.cable_available)}`,
+    s.station_number ? `\u{1F522} \u0631\u0642\u0645 \u0627\u0644\u0645\u062D\u0637\u0629: ${s.station_number}` : "",
+    `\u{1F4CB} \u0627\u0644\u062D\u0627\u0644\u0629: ${display(s.status)}`,
+    Number.isFinite(s.km) ? `\u{1F4CF} \u0627\u0644\u0645\u0633\u0627\u0641\u0629 \u0628\u062E\u0637 \u0645\u0633\u062A\u0642\u064A\u0645: ${s.km.toFixed(1)} \u0643\u0645` : ""
+  ].filter(Boolean).join("\n");
+}
+__name(stationText, "stationText");
+__name2(stationText, "stationText");
+function directionsKeyboard(stations, offset = 0, hasMore = false, morePrefix = "more_stations") {
+  const buttons = stations.map((s, i) => [{
+    text: `\u{1F5FA}\uFE0F \u0627\u0644\u0627\u062A\u062C\u0627\u0647\u0627\u062A \u0625\u0644\u0649 \u0627\u0644\u0645\u062D\u0637\u0629 ${offset + i + 1}`,
+    url: "https://www.google.com/maps/dir/?api=1&destination=" + encodeURIComponent(
+      `${s.latitude},${s.longitude}`
+    )
+  }]);
+  if (hasMore) {
+    buttons.push([{
+      text: "\u26A1 \u0639\u0631\u0636 3 \u0645\u062D\u0637\u0627\u062A \u0623\u062E\u0631\u0649",
+      callback_data: `${morePrefix}:${offset + 3}`
+    }]);
+  }
+  return {
+    inline_keyboard: buttons
+  };
+}
+__name(directionsKeyboard, "directionsKeyboard");
+__name2(directionsKeyboard, "directionsKeyboard");
+function pageMessage(stations, offset, heading) {
+  const content = stations.map(
+    (s, i) => stationText(s, offset + i)
+  ).join("\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n");
+  const hasDistance = stations.some(
+    (s) => Number.isFinite(s.km)
+  );
+  const notice = hasDistance ? "\n\n\u062A\u0646\u0628\u064A\u0647: \u0627\u0644\u0645\u0633\u0627\u0641\u0627\u062A \u0628\u062E\u0637 \u0645\u0633\u062A\u0642\u064A\u0645 \u0648\u0644\u064A\u0633\u062A \u0645\u0633\u0627\u0641\u0627\u062A \u0642\u064A\u0627\u062F\u0629. \u062A\u062D\u0642\u0642 \u0645\u0646 \u062D\u0627\u0644\u0629 \u0627\u0644\u0634\u0627\u062D\u0646 \u0642\u0628\u0644 \u0627\u0644\u0630\u0647\u0627\u0628." : "\n\n\u062A\u062D\u0642\u0642 \u0645\u0646 \u062D\u0627\u0644\u0629 \u0627\u0644\u0634\u0627\u062D\u0646 \u0642\u0628\u0644 \u0627\u0644\u0630\u0647\u0627\u0628.";
+  return `${heading}
+
+${content}${notice}`;
+}
+__name(pageMessage, "pageMessage");
+__name2(pageMessage, "pageMessage");
+async function ensureTripTable(db) {
+  await db.prepare(`
+    CREATE TABLE IF NOT EXISTS trip_planner_state (
+      chat_id TEXT PRIMARY KEY,
+      step TEXT NOT NULL,
+      start_lat REAL,
+      start_lon REAL,
+      start_name TEXT,
+      end_lat REAL,
+      end_lon REAL,
+      end_name TEXT,
+      mode TEXT DEFAULT 'ALL',
+      stage TEXT,
+      battery_percent REAL,
+      battery_capacity REAL,
+      battery_consumption REAL,
+      display_mode TEXT DEFAULT 'ALL',
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `).run();
+  const info = await db.prepare("PRAGMA table_info(trip_planner_state)").all();
+  const existing = new Set((info.results || []).map((column) => column.name));
+  const additions = {
+    stage: "TEXT",
+    battery_percent: "REAL",
+    battery_capacity: "REAL",
+    battery_consumption: "REAL",
+    display_mode: "TEXT DEFAULT 'ALL'"
+  };
+  for (const [column, definition] of Object.entries(additions)) {
+    if (!existing.has(column)) {
+      try {
+        await db.prepare(`ALTER TABLE trip_planner_state ADD COLUMN ${column} ${definition}`).run();
+      } catch (error) {
+        if (!/duplicate column name/i.test(String(error?.message || error))) throw error;
+      }
+    }
+  }
+}
+__name(ensureTripTable, "ensureTripTable");
+__name2(ensureTripTable, "ensureTripTable");
+async function getTrip(db, chat) {
+  await ensureTripTable(db);
+  return db.prepare("SELECT * FROM trip_planner_state WHERE chat_id = ?").bind(String(chat)).first();
+}
+__name(getTrip, "getTrip");
+__name2(getTrip, "getTrip");
+async function setTrip(db, chat, values) {
+  await ensureTripTable(db);
+  const allowed = [
+    "step",
+    "start_lat",
+    "start_lon",
+    "start_name",
+    "end_lat",
+    "end_lon",
+    "end_name",
+    "mode",
+    "battery_percent",
+    "battery_capacity",
+    "battery_consumption",
+    "display_mode"
+  ];
+  const keys = Object.keys(values).filter((key) => allowed.includes(key));
+  if (!keys.length) return;
+  const step = String(values.step || "start_choose");
+  await db.prepare(`
+    INSERT INTO trip_planner_state (chat_id, stage, step)
+    VALUES (?, ?, ?)
+    ON CONFLICT(chat_id) DO NOTHING
+  `).bind(String(chat), step, step).run();
+  const updateKeys = keys.includes("step") ? [...keys, "stage"] : keys;
+  const updateValues = keys.includes("step") ? [...keys.map((key) => values[key]), step] : keys.map((key) => values[key]);
+  const result = await db.prepare(`
+    UPDATE trip_planner_state
+    SET ${updateKeys.map((key) => key + " = ?").join(", ")},
+        updated_at = CURRENT_TIMESTAMP
+    WHERE chat_id = ?
+  `).bind(...updateValues, String(chat)).run();
+  if ((result.meta?.changes ?? 0) < 1) {
+    console.error("TRIP_STATE_SAVE_FAILED", String(chat), step);
+    throw new Error("TRIP_STATE_SAVE_FAILED");
+  }
+}
+__name(setTrip, "setTrip");
+__name2(setTrip, "setTrip");
+async function clearTrip(db, chat) {
+  await ensureTripTable(db);
+  await db.prepare("DELETE FROM trip_planner_state WHERE chat_id = ?").bind(String(chat)).run();
+}
+__name(clearTrip, "clearTrip");
+__name2(clearTrip, "clearTrip");
+function validPoint(lat, lon) {
+  return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+}
+__name(validPoint, "validPoint");
+__name2(validPoint, "validPoint");
+function pointPrompt(start) {
+  return start ? "\u{1F6A9} \u062D\u062F\u062F \u0646\u0642\u0637\u0629 \u0627\u0644\u0627\u0646\u0637\u0644\u0627\u0642:\n\n\u{1F4CD} \u0623\u0631\u0633\u0644 \u0627\u0644\u0645\u0648\u0642\u0639\u060C \u0623\u0648 \u{1F50D} \u0627\u0643\u062A\u0628 \u0627\u0633\u0645 \u0627\u0644\u0645\u062F\u064A\u0646\u0629." : "\u{1F3C1} \u062D\u062F\u062F \u0648\u062C\u0647\u0629 \u0627\u0644\u0631\u062D\u0644\u0629:\n\n\u{1F4CD} \u0623\u0631\u0633\u0644 \u0645\u0648\u0642\u0639 \u0627\u0644\u0648\u062C\u0647\u0629\u060C \u0623\u0648 \u{1F50D} \u0627\u0643\u062A\u0628 \u0627\u0633\u0645 \u0627\u0644\u0645\u062F\u064A\u0646\u0629.";
+}
+__name(pointPrompt, "pointPrompt");
+__name2(pointPrompt, "pointPrompt");
+async function startTrip(env, chat) {
+  await batteryEnsureTables(env.DB);
+  await env.DB.prepare(
+    "DELETE FROM battery_calculator_state WHERE chat_id = ?"
+  ).bind(String(chat)).run();
+  await clearTrip(env.DB, chat);
+  await clearTripResults(env.DB, chat);
+  await setTrip(env.DB, chat, { step: "start_choose" });
+  await reply(env, chat, pointPrompt(true), TRIP_POINT_MENU);
+}
+__name(startTrip, "startTrip");
+__name2(startTrip, "startTrip");
+var GCC_CITIES = [
+  ["\u0627\u0644\u0631\u064A\u0627\u0636|riyadh", 24.7136, 46.6753],
+  ["\u0627\u0644\u062E\u0628\u0631|khobar|al khobar", 26.2794, 50.2083],
+  ["\u0627\u0644\u062F\u0645\u0627\u0645|dammam", 26.4207, 50.0888],
+  ["\u0627\u0644\u0638\u0647\u0631\u0627\u0646|dhahran", 26.2886, 50.1139],
+  ["\u0627\u0644\u0642\u0637\u064A\u0641|qatif", 26.5652, 50.0089],
+  ["\u0627\u0644\u0627\u062D\u0633\u0627\u0621|\u0627\u0644\u0627\u062D\u0633\u0627\u0621|\u0627\u0644\u0647\u0641\u0648\u0641|hofuf|al ahsa", 25.3647, 49.5876],
+  ["\u0627\u0644\u062C\u0628\u064A\u0644|jubail", 27.0046, 49.646],
+  ["\u0631\u0627\u0633 \u062A\u0646\u0648\u0631\u0629|ras tanura", 26.6435, 50.159],
+  ["\u0645\u0643\u0647|\u0645\u0643\u0629|makkah|mecca", 21.3891, 39.8579],
+  ["\u062C\u062F\u0647|\u062C\u062F\u0629|jeddah", 21.5433, 39.1728],
+  ["\u0627\u0644\u0645\u062F\u064A\u0646\u0647|\u0627\u0644\u0645\u062F\u064A\u0646\u0629|\u0627\u0644\u0645\u062F\u064A\u0646\u0647 \u0627\u0644\u0645\u0646\u0648\u0631\u0647|medina|madinah", 24.5247, 39.5692],
+  ["\u0627\u0644\u0637\u0627\u064A\u0641|\u0627\u0644\u0637\u0627\u0626\u0641|taif", 21.2703, 40.4158],
+  ["\u064A\u0646\u0628\u0639|yanbu", 24.0895, 38.0618],
+  ["\u062A\u0628\u0648\u0643|tabuk", 28.3838, 36.555],
+  ["\u062D\u0627\u064A\u0644|\u062D\u0627\u0626\u0644|hail", 27.5114, 41.7208],
+  ["\u0628\u0631\u064A\u062F\u0647|\u0628\u0631\u064A\u062F\u0629|buraydah", 26.3592, 43.9818],
+  ["\u0639\u0646\u064A\u0632\u0647|\u0639\u0646\u064A\u0632\u0629|unaizah", 26.0906, 43.975],
+  ["\u0627\u0628\u0647\u0627|\u0623\u0628\u0647\u0627|abha", 18.2465, 42.5117],
+  ["\u062E\u0645\u064A\u0633 \u0645\u0634\u064A\u0637|khamis mushait", 18.3064, 42.7292],
+  ["\u062C\u0627\u0632\u0627\u0646|\u062C\u064A\u0632\u0627\u0646|jazan|jizan", 16.8892, 42.5511],
+  ["\u0646\u062C\u0631\u0627\u0646|najran", 17.565, 44.2289],
+  ["\u0627\u0644\u0628\u0627\u062D\u0647|\u0627\u0644\u0628\u0627\u062D\u0629|al baha", 20.0129, 41.4677],
+  ["\u0633\u0643\u0627\u0643\u0627|sakaka", 29.9697, 40.2064],
+  ["\u0639\u0631\u0639\u0631|arar", 30.9753, 41.0381],
+  ["\u062D\u0641\u0631 \u0627\u0644\u0628\u0627\u0637\u0646|hafr al batin", 28.4328, 45.9708],
+  ["\u0627\u0644\u062E\u0641\u062C\u064A|khafji", 28.4392, 48.4913],
+  ["\u0627\u0644\u062F\u0648\u0627\u062F\u0645\u064A|dawadmi", 24.5077, 44.3924],
+  ["\u0627\u0644\u062F\u0648\u062D\u0647|\u0627\u0644\u062F\u0648\u062D\u0629|doha", 25.2854, 51.531],
+  ["\u0627\u0644\u0631\u064A\u0627\u0646|al rayyan", 25.2919, 51.4244],
+  ["\u0627\u0644\u0648\u0643\u0631\u0629|\u0627\u0644\u0648\u0643\u0640\u0631\u0629|al wakrah", 25.1715, 51.6034],
+  ["\u0627\u0644\u062E\u0648\u0631|al khor", 25.6839, 51.5058],
+  ["\u0644\u0648\u0633\u064A\u0644|lusail", 25.42, 51.49],
+  ["\u0627\u0628\u0648 \u0633\u0645\u0631\u0629|\u0623\u0628\u0648 \u0633\u0645\u0631\u0629|abu samra", 24.7445, 50.8476],
+  ["\u0627\u0644\u0643\u0648\u064A\u062A|\u0645\u062F\u064A\u0646\u0647 \u0627\u0644\u0643\u0648\u064A\u062A|\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0643\u0648\u064A\u062A|kuwait city", 29.3759, 47.9774],
+  ["\u0627\u0644\u062C\u0647\u0631\u0627\u0621|jahra", 29.3375, 47.6581],
+  ["\u0627\u0644\u0627\u062D\u0645\u062F\u064A|\u0627\u0644\u0623\u062D\u0645\u062F\u064A|ahmadi", 29.0769, 48.0839],
+  ["\u0627\u0644\u0641\u062D\u064A\u062D\u064A\u0644|fahaheel", 29.0825, 48.1303],
+  ["\u0627\u0644\u0633\u0627\u0644\u0645\u064A\u0647|\u0627\u0644\u0633\u0627\u0644\u0645\u064A\u0629|salmiya", 29.3339, 48.0761],
+  ["\u062D\u0648\u0644\u064A|hawally", 29.3375, 48.0285],
+  ["\u0627\u0644\u0641\u0631\u0648\u0627\u0646\u064A\u0647|\u0627\u0644\u0641\u0631\u0648\u0627\u0646\u064A\u0629|farwaniya", 29.2775, 47.9586],
+  ["\u0627\u0644\u0645\u0646\u0627\u0645\u0647|\u0627\u0644\u0645\u0646\u0627\u0645\u0629|manama", 26.2235, 50.5876],
+  ["\u0627\u0644\u0645\u062D\u0631\u0642|muharraq", 26.2572, 50.6119],
+  ["\u0627\u0644\u0631\u0641\u0627\u0639|riffa", 26.13, 50.555],
+  ["\u0645\u062F\u064A\u0646\u0647 \u0639\u064A\u0633\u0649|\u0645\u062F\u064A\u0646\u0629 \u0639\u064A\u0633\u0649|isa town", 26.1736, 50.5478],
+  ["\u0633\u062A\u0631\u0647|\u0633\u062A\u0631\u0629|sitra", 26.1547, 50.621],
+  ["\u062D\u0645\u062F|\u0645\u062F\u064A\u0646\u0647 \u062D\u0645\u062F|\u0645\u062F\u064A\u0646\u0629 \u062D\u0645\u062F|hamad town", 26.1153, 50.507],
+  ["\u062F\u0628\u064A|dubai", 25.2048, 55.2708],
+  ["\u0627\u0628\u0648\u0638\u0628\u064A|\u0623\u0628\u0648\u0638\u0628\u064A|abu dhabi", 24.4539, 54.3773],
+  ["\u0627\u0644\u0634\u0627\u0631\u0642\u0647|\u0627\u0644\u0634\u0627\u0631\u0642\u0629|sharjah", 25.3463, 55.4209],
+  ["\u0639\u062C\u0645\u0627\u0646|ajman", 25.4052, 55.5136],
+  ["\u0627\u0645 \u0627\u0644\u0642\u064A\u0648\u064A\u0646|\u0623\u0645 \u0627\u0644\u0642\u064A\u0648\u064A\u0646|umm al quwain", 25.5647, 55.5552],
+  ["\u0631\u0627\u0633 \u0627\u0644\u062E\u064A\u0645\u0647|\u0631\u0623\u0633 \u0627\u0644\u062E\u064A\u0645\u0629|ras al khaimah", 25.7895, 55.9432],
+  ["\u0627\u0644\u0641\u062C\u064A\u0631\u0647|\u0627\u0644\u0641\u062C\u064A\u0631\u0629|fujairah", 25.1288, 56.3265],
+  ["\u0627\u0644\u0639\u064A\u0646|al ain", 24.2075, 55.7447],
+  ["\u062E\u0648\u0631\u0641\u0643\u0627\u0646|\u062E\u0648\u0631 \u0641\u0643\u0627\u0646|khor fakkan", 25.3313, 56.341],
+  ["\u0643\u0644\u0628\u0627\u0621|kalba", 25.0743, 56.3553],
+  ["\u0645\u0633\u0642\u0637|muscat", 23.588, 58.3829],
+  ["\u0627\u0644\u0633\u064A\u0628|seeb", 23.6703, 58.1891],
+  ["\u0645\u0637\u0631\u062D|muttrah", 23.6167, 58.5667],
+  ["\u0635\u062D\u0627\u0631|sohar|suhar", 24.3475, 56.7094],
+  ["\u0635\u0644\u0627\u0644\u0647|\u0635\u0644\u0627\u0644\u0629|salalah", 17.0194, 54.0897],
+  ["\u0646\u0632\u0648\u0649|nizwa", 22.9333, 57.5333],
+  ["\u0635\u0648\u0631|sur oman|sur", 22.5667, 59.5289],
+  ["\u0627\u0644\u0628\u0631\u064A\u0645\u064A|buraimi", 24.25, 55.7931],
+  ["\u0639\u0628\u0631\u064A|ibri", 23.2257, 56.5157],
+  ["\u0627\u0644\u0631\u0633\u062A\u0627\u0642|rustaq", 23.3908, 57.4244],
+  ["\u062E\u0635\u0628|khasab", 26.1799, 56.2477],
+  ["\u0627\u0644\u062F\u0642\u0645|duqm", 19.65, 57.7]
+];
+function isGccPoint(lat, lon) {
+  return validPoint(lat, lon) && lat >= 16 && lat <= 33 && lon >= 34 && lon <= 61;
+}
+__name(isGccPoint, "isGccPoint");
+__name2(isGccPoint, "isGccPoint");
+var GCC_COUNTRY_CENTERS = [
+  ["\u0642\u0637\u0631|qatar|state of qatar", "\u0642\u0637\u0631 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0627\u0644\u062F\u0648\u062D\u0629)", 25.2854, 51.531],
+  ["\u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629|\u0627\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629|saudi arabia", "\u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0627\u0644\u0631\u064A\u0627\u0636)", 24.7136, 46.6753],
+  ["\u0627\u0644\u0627\u0645\u0627\u0631\u0627\u062A|\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A|\u0627\u0644\u0627\u0645\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0645\u062A\u062D\u062F\u0629|\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0645\u062A\u062D\u062F\u0629|united arab emirates|uae", "\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0623\u0628\u0648\u0638\u0628\u064A)", 24.4539, 54.3773],
+  ["\u0627\u0644\u0643\u0648\u064A\u062A|kuwait", "\u0627\u0644\u0643\u0648\u064A\u062A (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0643\u0648\u064A\u062A)", 29.3759, 47.9774],
+  ["\u0627\u0644\u0628\u062D\u0631\u064A\u0646|bahrain", "\u0627\u0644\u0628\u062D\u0631\u064A\u0646 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0627\u0644\u0645\u0646\u0627\u0645\u0629)", 26.2235, 50.5876],
+  ["\u0639\u0645\u0627\u0646|\u0633\u0644\u0637\u0646\u0629 \u0639\u0645\u0627\u0646|oman", "\u0639\u064F\u0645\u0627\u0646 (\u0645\u0631\u0643\u0632 \u062A\u0642\u0631\u064A\u0628\u064A: \u0645\u0633\u0642\u0637)", 23.588, 58.3829]
+];
+var GCC_TRAVEL_LANDMARKS = [
+  ["\u0645\u0646\u0641\u0630 \u0627\u0644\u0628\u0637\u062D\u0627\u0621|\u0627\u0644\u0628\u0637\u062D\u0627\u0621|\u0645\u0646\u0641\u0630 \u0627\u0644\u0628\u062D\u0637\u0627\u0621|\u0627\u0644\u0628\u062D\u0637\u0627\u0621|al batha|al batha border crossing|al batha border post|batha border|al bat'ha", "\u0645\u0646\u0641\u0630 \u0627\u0644\u0628\u0637\u062D\u0627\u0621 (\u0645\u0648\u0642\u0639 \u062A\u0642\u0631\u064A\u0628\u064A)", 24.122764, 51.58176],
+  ["\u0645\u0646\u0641\u0630 \u0627\u0644\u063A\u0648\u064A\u0641\u0627\u062A|\u0627\u0644\u063A\u0648\u064A\u0641\u0627\u062A|al ghuwaifat|al ghuwaifat border post|al ghuwaifat border crossing|ghuwaifat|al ghuweifat", "\u0645\u0646\u0641\u0630 \u0627\u0644\u063A\u0648\u064A\u0641\u0627\u062A (\u0645\u0648\u0642\u0639 \u062A\u0642\u0631\u064A\u0628\u064A)", 24.1281, 51.61801],
+  ["\u0645\u0637\u0627\u0631 \u0627\u0644\u0645\u0644\u0643 \u0641\u0647\u062F|\u0645\u0637\u0627\u0631 \u0627\u0644\u0645\u0644\u0643 \u0641\u0647\u062F \u0627\u0644\u062F\u0648\u0644\u064A|king fahd international airport|king fahd airport|dammam airport|oedf|dmm airport", "\u0645\u0637\u0627\u0631 \u0627\u0644\u0645\u0644\u0643 \u0641\u0647\u062F \u0627\u0644\u062F\u0648\u0644\u064A (\u0645\u0631\u0643\u0632 \u0627\u0644\u0645\u0637\u0627\u0631 \u0627\u0644\u062A\u0642\u0631\u064A\u0628\u064A)", 26.471194, 49.798583]
+];
+async function findCityPoint(db, name, env) {
+  const key = normalizeSearch(name);
+  if (key.length < 2) {
+    return { error: "\u0627\u0643\u062A\u0628 \u0627\u0633\u0645 \u0645\u062F\u064A\u0646\u0629 \u0645\u0646 \u062D\u0631\u0641\u064A\u0646 \u0639\u0644\u0649 \u0627\u0644\u0623\u0642\u0644." };
+  }
+  const landmarkPoint = GCC_TRAVEL_LANDMARKS.find(
+    (row) => String(row[0]).split("|").some((alias) => normalizeSearch(alias) === key)
+  );
+  if (landmarkPoint) {
+    return { name: landmarkPoint[1], lat: landmarkPoint[2], lon: landmarkPoint[3], approximate: true };
+  }
+  const countryPoint = GCC_COUNTRY_CENTERS.find(
+    (row) => String(row[0]).split("|").some((alias) => normalizeSearch(alias) === key)
+  );
+  if (countryPoint) {
+    return { name: countryPoint[1], lat: countryPoint[2], lon: countryPoint[3], approximate: true };
+  }
+  const found = GCC_CITIES.find(
+    (row) => String(row[0]).split("|").some((alias) => normalizeSearch(alias) === key)
+  );
+  if (found) {
+    return {
+      name: String(found[0]).split("|")[0],
+      lat: Number(found[1]),
+      lon: Number(found[2]),
+      approximate: true
+    };
+  }
+  const countries = ["sa", "ae", "qa", "kw", "bh", "om"];
+  const url = new URL("https://nominatim.openstreetmap.org/search");
+  url.searchParams.set("q", String(name).trim());
+  url.searchParams.set("format", "jsonv2");
+  url.searchParams.set("addressdetails", "1");
+  url.searchParams.set("limit", "5");
+  url.searchParams.set("countrycodes", countries.join(","));
+  try {
+    const cache = caches.default;
+    const cacheKey = new Request(url.toString());
+    let response = await cache.match(cacheKey);
+    if (!response) {
+      if (!env?.GEO_LIMITER) {
+        return { error: "\u062E\u062F\u0645\u0629 \u0627\u0644\u0628\u062D\u062B \u0627\u0644\u0645\u0648\u0633\u0639 \u063A\u064A\u0631 \u0645\u0641\u0639\u0644\u0629 \u062D\u0627\u0644\u064A\u0627. \u0623\u0631\u0633\u0644 \u0645\u0648\u0642\u0639\u0643 \u0628\u062F\u0644\u0627 \u0645\u0646 \u0627\u0633\u0645 \u0627\u0644\u0645\u062F\u064A\u0646\u0629." };
+      }
+      const geoId = env.GEO_LIMITER.idFromName("gcc-nominatim-global");
+      const geoStub = env.GEO_LIMITER.get(geoId);
+      const permit = await geoStub.acquire();
+      if (!permit.allowed) {
+        return { error: "\u23F3 \u064A\u0648\u062C\u062F \u0636\u063A\u0637 \u0645\u0624\u0642\u062A \u0639\u0644\u0649 \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0627\u0644\u0645\u062F\u0646. \u062D\u0627\u0648\u0644 \u0628\u0639\u062F \u062B\u0648\u0627\u0646 \u0623\u0648 \u0623\u0631\u0633\u0644 \u0627\u0644\u0645\u0648\u0642\u0639." };
+      }
+      response = await fetch(url.toString(), {
+        headers: {
+          "Accept": "application/json",
+          "Accept-Language": "ar,en;q=0.8",
+          "User-Agent": "GCC-EV-Chargers-Bot/1.0 (https://t.me/GCC_EV_Chargers_bot)"
+        },
+        signal: AbortSignal.timeout(8e3)
+      });
+      if (response.ok) {
+        const copy = new Response(response.clone().body, response);
+        copy.headers.set("Cache-Control", "public, max-age=2592000");
+        await cache.put(cacheKey, copy);
+      }
+    }
+    if (!response.ok) {
+      return {
+        error: "\u062A\u0639\u0630\u0631 \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u062D\u0627\u0644\u064A\u0627. \u062D\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649 \u0623\u0648 \u0623\u0631\u0633\u0644 \u0627\u0644\u0645\u0648\u0642\u0639."
+      };
+    }
+    const results = await response.json();
+    const allowed = new Set(countries);
+    const match = results.find((item) => {
+      const lat = Number(item.lat);
+      const lon = Number(item.lon);
+      const country = String(item.address?.country_code || "").toLowerCase();
+      const placeType = String(item.addresstype || item.type || "").toLowerCase();
+      const category = String(item.category || item.class || "").toLowerCase();
+      const isSettlement = ["city", "town", "village", "hamlet", "municipality", "suburb", "neighbourhood", "locality", "county", "state", "region", "province", "district"].includes(placeType);
+      const isAirport = placeType === "aerodrome" || placeType === "airport" || category === "aeroway" && placeType === "aerodrome";
+      const isBorder = ["border_control", "border_crossing", "checkpoint", "crossing"].includes(placeType) || category === "barrier" && placeType === "border_control";
+      const requested = normalizeSearch(name);
+      const named = normalizeSearch([item.name, item.display_name?.split(",")[0]].filter(Boolean).join(" "));
+      const significant = requested.split(" ").filter((word) => word.length >= 3 && !["border", "crossing", "airport", "international", "\u0645\u0646\u0641\u0630", "\u0645\u0637\u0627\u0631", "\u0627\u0644\u062D\u062F\u0648\u062F\u064A"].includes(word));
+      const relatedName = significant.length > 0 && significant.every((word) => named.includes(word));
+      return allowed.has(country) && isGccPoint(lat, lon) && (isSettlement || (isAirport || isBorder) && relatedName);
+    });
+    if (!match) {
+      return {
+        error: "\u0644\u0645 \u0623\u062C\u062F \u0645\u0648\u0642\u0639\u064B\u0627 \u0645\u0637\u0627\u0628\u0642\u064B\u0627 \u062F\u0627\u062E\u0644 \u062F\u0648\u0644 \u0627\u0644\u062E\u0644\u064A\u062C. \u062C\u0631\u0651\u0628 \u0627\u0633\u0645\u064B\u0627 \u0622\u062E\u0631 \u0623\u0648 \u0623\u0631\u0633\u0644 \u0627\u0644\u0645\u0648\u0642\u0639 \u0645\u0628\u0627\u0634\u0631\u0629."
+      };
+    }
+    return {
+      name: String(match.name || match.display_name.split(",")[0]).trim(),
+      lat: Number(match.lat),
+      lon: Number(match.lon),
+      approximate: true
+    };
+  } catch (error) {
+    console.error("CITY_SEARCH_ERROR:", error?.stack || String(error));
+    return {
+      error: "\u062E\u062F\u0645\u0629 \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0627\u0644\u0645\u062F\u0646 \u063A\u064A\u0631 \u0645\u062A\u0627\u062D\u0629 \u062D\u0627\u0644\u064A\u0627. \u062D\u0627\u0648\u0644 \u0644\u0627\u062D\u0642\u0627 \u0623\u0648 \u0623\u0631\u0633\u0644 \u0627\u0644\u0645\u0648\u0642\u0639."
+    };
+  }
+}
+__name(findCityPoint, "findCityPoint");
+__name2(findCityPoint, "findCityPoint");
+async function acceptTripPoint(env, chat, trip, point) {
+  const starting = trip.step.startsWith("start_");
+  if (starting) {
+    await setTrip(env.DB, chat, {
+      start_lat: point.lat,
+      start_lon: point.lon,
+      start_name: point.name,
+      step: "end_choose"
+    });
+    await reply(
+      env,
+      chat,
+      `\u2705 \u0627\u0644\u0627\u0646\u0637\u0644\u0627\u0642: ${point.name}
+
+` + (point.approximate ? "\u2139\uFE0F \u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u062A\u0642\u062F\u064A\u0631\u064A \u0627\u0639\u062A\u0645\u0627\u062F\u064B\u0627 \u0639\u0644\u0649 \u0645\u0631\u0643\u0632 \u0627\u0644\u0645\u062F\u064A\u0646\u0629.\n\n" : "") + pointPrompt(false),
+      TRIP_POINT_MENU
+    );
+  } else {
+    await setTrip(env.DB, chat, {
+      end_lat: point.lat,
+      end_lon: point.lon,
+      end_name: point.name,
+      step: "mode_choose"
+    });
+    await reply(
+      env,
+      chat,
+      `\u2705 \u0627\u0644\u0648\u062C\u0647\u0629: ${point.name}
+
+\u26A1 \u0627\u062E\u062A\u0631 \u0646\u0648\u0639 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u0639\u0644\u0649 \u0645\u0633\u0627\u0631 \u0627\u0644\u0631\u062D\u0644\u0629:`,
+      TRIP_MODE_MENU
+    );
+  }
+}
+__name(acceptTripPoint, "acceptTripPoint");
+__name2(acceptTripPoint, "acceptTripPoint");
+var ROUTES_PER_USER_24H = 1;
+var ROUTES_PER_UTC_DAY = 1800;
+var ROUTES_PER_UTC_MINUTE = 35;
+async function ensureRouteQuotaTables(db) {
+  await db.prepare(`CREATE TABLE IF NOT EXISTS route_fair_use_users (
+    chat_id TEXT PRIMARY KEY,
+    window_start INTEGER NOT NULL,
+    used INTEGER NOT NULL DEFAULT 0
+  )`).run();
+  await db.prepare(`CREATE TABLE IF NOT EXISTS route_fair_use_buckets (
+    bucket TEXT PRIMARY KEY,
+    used INTEGER NOT NULL DEFAULT 0
+  )`).run();
+  await db.prepare(`CREATE TABLE IF NOT EXISTS route_paid_reservations (
+    reservation_id TEXT PRIMARY KEY,
+    chat_id TEXT NOT NULL,
+    window_start INTEGER NOT NULL,
+    minute_bucket TEXT NOT NULL,
+    day_bucket TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'RESERVED',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  )`).run();
+}
+__name(ensureRouteQuotaTables, "ensureRouteQuotaTables");
+__name2(ensureRouteQuotaTables, "ensureRouteQuotaTables");
+async function reserveRouteQuota(db, chat) {
+  await ensureRouteQuotaTables(db);
+  const now = Math.floor(Date.now() / 1e3);
+  const chatId = String(chat);
+  const day = new Date(now * 1e3).toISOString().slice(0, 10);
+  const minute = Math.floor(now / 60);
+  const minuteKey = `minute:${minute}`;
+  const dayKey = `day:${day}`;
+  const membership = await db.prepare("SELECT plan, expires_at FROM subscriptions WHERE telegram_user_id=?").bind(chatId).first();
+  const isOwnerVipPlus = chatId === ADMIN_USER_ID && membership?.plan === "VIP_PLUS";
+  const validPaid = membership && PLANS[membership.plan] && Date.parse(membership.expires_at || "") > Date.now();
+  if (!validPaid && !isOwnerVipPlus) {
+    const reservationId = (/* @__PURE__ */ new Date()).toISOString();
+    const trial = await db.prepare(`INSERT INTO route_free_trials (telegram_user_id, status, created_at)
+      VALUES (?, 'RESERVED', ?)
+      ON CONFLICT(telegram_user_id) DO UPDATE SET
+        status='RESERVED', created_at=excluded.created_at, used_at=NULL
+      WHERE route_free_trials.status='RESERVED'
+        AND datetime(route_free_trials.created_at) < datetime('now', '-15 minutes')
+      RETURNING telegram_user_id`).bind(chatId, reservationId).first();
+    if (!trial) {
+      const current = await db.prepare("SELECT status FROM route_free_trials WHERE telegram_user_id=?").bind(chatId).first();
+      if (current?.status === "RESERVED") return { ok: false, message: "\u23F3 \u062A\u0648\u062C\u062F \u0645\u062D\u0627\u0648\u0644\u0629 \u062A\u062E\u0637\u064A\u0637 \u0642\u064A\u062F \u0627\u0644\u062A\u0646\u0641\u064A\u0630. \u0627\u0646\u062A\u0638\u0631 \u0642\u0644\u064A\u0644\u064B\u0627 \u062B\u0645 \u0623\u0639\u062F \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629. \u0625\u0630\u0627 \u062A\u0648\u0642\u0641\u062A \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629\u060C \u062A\u064F\u062A\u0627\u062D \u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u062A\u0644\u0642\u0627\u0626\u064A\u064B\u0627 \u0628\u0639\u062F 15 \u062F\u0642\u064A\u0642\u0629." };
+      return { ok: false, message: "\u{1F512} \u0627\u0633\u062A\u062E\u062F\u0645\u062A \u062A\u062C\u0631\u0628\u062A\u0643 \u0627\u0644\u0645\u062C\u0627\u0646\u064A\u0629 \u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0629 \u0633\u0627\u0628\u0642\u064B\u0627. \u0627\u0644\u062A\u062C\u0631\u0628\u0629 \u0645\u062A\u0627\u062D\u0629 \u0645\u0631\u0629 \u0648\u0627\u062D\u062F\u0629 \u0641\u0642\u0637 \u0644\u0643\u0644 \u062D\u0633\u0627\u0628\u060C \u0648\u064A\u0645\u0643\u0646\u0643 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643 \u0644\u062A\u062E\u0637\u064A\u0637 \u0631\u062D\u0644\u0627\u062A \u0625\u0636\u0627\u0641\u064A\u0629.\n\n\u26A1 \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u0645\u062A\u0627\u062D \u0645\u062C\u0627\u0646\u064B\u0627." };
+    }
+    const release = /* @__PURE__ */ __name(async () => {
+      await db.prepare("DELETE FROM route_free_trials WHERE telegram_user_id=? AND status='RESERVED' AND created_at=?").bind(chatId, reservationId).run();
+    }, "release");
+    const reserveBucket2 = /* @__PURE__ */ __name((key, limit) => db.prepare(`INSERT INTO route_fair_use_buckets (bucket, used) VALUES (?, 1)
+      ON CONFLICT(bucket) DO UPDATE SET used=used+1 WHERE used < ? RETURNING used`).bind(key, limit).first(), "reserveBucket");
+    let minuteReserved2 = false;
+    let dayReserved2 = false;
+    try {
+      minuteReserved2 = Boolean(await reserveBucket2(minuteKey, ROUTES_PER_UTC_MINUTE));
+      if (!minuteReserved2) {
+        await release();
+        return { ok: false, message: "\u23F3 \u064A\u0648\u062C\u062F \u0636\u063A\u0637 \u0645\u0624\u0642\u062A \u0639\u0644\u0649 \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A. \u062D\u0627\u0648\u0644 \u0628\u0639\u062F \u062F\u0642\u064A\u0642\u0629\u061B \u0644\u0645 \u062A\u064F\u062E\u0635\u0645 \u062A\u062C\u0631\u0628\u062A\u0643." };
+      }
+      dayReserved2 = Boolean(await reserveBucket2(dayKey, ROUTES_PER_UTC_DAY));
+      if (!dayReserved2) {
+        await db.prepare("UPDATE route_fair_use_buckets SET used=MAX(0,used-1) WHERE bucket=?").bind(minuteKey).run();
+        await release();
+        return { ok: false, message: "\u23F3 \u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062D\u062F \u0627\u0644\u064A\u0648\u0645\u064A \u0644\u062E\u062F\u0645\u0629 \u0627\u0644\u0645\u0633\u0627\u0631\u0627\u062A. \u062D\u0627\u0648\u0644 \u063A\u062F\u064B\u0627\u061B \u0644\u0645 \u062A\u064F\u062E\u0635\u0645 \u062A\u062C\u0631\u0628\u062A\u0643." };
+      }
+      return { ok: true, freeTrial: true, trialUserId: chatId, reservationId };
+    } catch (error) {
+      if (dayReserved2) await db.prepare("UPDATE route_fair_use_buckets SET used=MAX(0,used-1) WHERE bucket=?").bind(dayKey).run();
+      if (minuteReserved2) await db.prepare("UPDATE route_fair_use_buckets SET used=MAX(0,used-1) WHERE bucket=?").bind(minuteKey).run();
+      await release();
+      throw error;
+    }
+  }
+  const userLimit = validPaid ? PLANS[membership.plan].routes : ROUTES_PER_USER_24H;
+  const user = await db.prepare(`
+    INSERT INTO route_fair_use_users (chat_id, window_start, used)
+    VALUES (?, ?, 1)
+    ON CONFLICT(chat_id) DO UPDATE SET
+      window_start = CASE WHEN window_start <= ? THEN excluded.window_start ELSE window_start END,
+      used = CASE WHEN window_start <= ? THEN 1 ELSE used + 1 END
+    WHERE window_start <= ? OR used < ? OR ? = 1
+    RETURNING window_start, used
+  `).bind(chatId, now, now - 86400, now - 86400, now - 86400, userLimit, isOwnerVipPlus ? 1 : 0).first();
+  if (!user) {
+    const old = await db.prepare("SELECT window_start FROM route_fair_use_users WHERE chat_id = ?").bind(chatId).first();
+    const hours = Math.max(1, Math.ceil((Number(old?.window_start || now) + 86400 - now) / 3600));
+    return { ok: false, message: `\u26A0\uFE0F \u0648\u0635\u0644\u062A \u0625\u0644\u0649 \u062D\u062F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A \u0644\u0639\u0636\u0648\u064A\u062A\u0643 (${userLimit} \u0631\u062D\u0644\u0629 \u062E\u0644\u0627\u0644 24 \u0633\u0627\u0639\u0629).
+
+\u{1F504} \u064A\u0645\u0643\u0646\u0643 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0645\u062C\u062F\u062F\u064B\u0627 \u0628\u0639\u062F \u062D\u0648\u0627\u0644\u064A ${hours} \u0633\u0627\u0639\u0629.
+
+\u26A1 \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0627\u0644\u0645\u062D\u0637\u0627\u062A \u0648\u0639\u0631\u0636 \u0627\u0644\u0645\u0632\u064A\u062F \u0645\u062A\u0627\u062D\u0627\u0646 \u062F\u0648\u0646 \u062D\u062F.` };
+  }
+  const reserveBucket = /* @__PURE__ */ __name((key, limit) => db.prepare(`
+    INSERT INTO route_fair_use_buckets (bucket, used) VALUES (?, 1)
+    ON CONFLICT(bucket) DO UPDATE SET used = used + 1 WHERE used < ?
+    RETURNING used
+  `).bind(key, limit).first(), "reserveBucket");
+  const undo = /* @__PURE__ */ __name(async (key) => {
+    await db.prepare("UPDATE route_fair_use_buckets SET used = MAX(0, used - 1) WHERE bucket = ?").bind(key).run();
+  }, "undo");
+  const undoUser = /* @__PURE__ */ __name(async () => {
+    await db.prepare("UPDATE route_fair_use_users SET used = MAX(0, used - 1) WHERE chat_id = ? AND window_start = ?").bind(chatId, Number(user.window_start)).run();
+  }, "undoUser");
+  let minuteReserved = false;
+  let dayReserved = false;
+  try {
+    minuteReserved = Boolean(await reserveBucket(minuteKey, ROUTES_PER_UTC_MINUTE));
+    if (!minuteReserved) {
+      await undoUser();
+      return { ok: false, message: "\u23F3 \u064A\u0648\u062C\u062F \u0636\u063A\u0637 \u0645\u0624\u0642\u062A \u0639\u0644\u0649 \u062E\u062F\u0645\u0629 \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A. \u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u064B\u0627 \u0628\u0639\u062F \u062F\u0642\u064A\u0642\u0629\u061B \u0644\u0645 \u062A\u064F\u062E\u0635\u0645 \u0631\u062D\u0644\u0629 \u0645\u0646 \u062D\u0635\u062A\u0643." };
+    }
+    dayReserved = Boolean(await reserveBucket(dayKey, ROUTES_PER_UTC_DAY));
+    if (!dayReserved) {
+      await undo(minuteKey);
+      await undoUser();
+      return { ok: false, message: "\u26A0\uFE0F \u0627\u0643\u062A\u0645\u0644 \u0627\u0644\u062D\u062F \u0627\u0644\u064A\u0648\u0645\u064A \u0644\u062E\u062F\u0645\u0629 \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A. \u062D\u0627\u0648\u0644 \u063A\u062F\u064B\u0627\u061B \u0644\u0645 \u062A\u064F\u062E\u0635\u0645 \u0631\u062D\u0644\u0629 \u0645\u0646 \u062D\u0635\u062A\u0643." };
+    }
+    const reservationId = crypto.randomUUID();
+    await db.prepare(`INSERT INTO route_paid_reservations
+      (reservation_id, chat_id, window_start, minute_bucket, day_bucket, status)
+      VALUES (?, ?, ?, ?, ?, 'RESERVED')`).bind(reservationId, chatId, Number(user.window_start), minuteKey, dayKey).run();
+    return { ok: true, paidReservationId: reservationId };
+  } catch (error) {
+    console.error("Route quota reservation error", error);
+    if (dayReserved) await undo(dayKey);
+    if (minuteReserved) await undo(minuteKey);
+    await undoUser();
+    throw error;
+  }
+}
+__name(reserveRouteQuota, "reserveRouteQuota");
+__name2(reserveRouteQuota, "reserveRouteQuota");
+async function finishPaidRouteReservation(db, quota, outcome) {
+  if (!quota?.paidReservationId) return false;
+  const status = outcome === "USED" ? "USED" : "RELEASED";
+  const reservation = await db.prepare(`UPDATE route_paid_reservations
+    SET status = ? WHERE reservation_id = ? AND status = 'RESERVED'
+    RETURNING chat_id, window_start, minute_bucket, day_bucket`).bind(status, quota.paidReservationId).first();
+  if (!reservation) return false;
+  if (status === "RELEASED") {
+    await db.batch([
+      db.prepare("UPDATE route_fair_use_users SET used = MAX(0, used - 1) WHERE chat_id = ? AND window_start = ?").bind(reservation.chat_id, reservation.window_start),
+      db.prepare("UPDATE route_fair_use_buckets SET used = MAX(0, used - 1) WHERE bucket = ?").bind(reservation.minute_bucket),
+      db.prepare("UPDATE route_fair_use_buckets SET used = MAX(0, used - 1) WHERE bucket = ?").bind(reservation.day_bucket)
+    ]);
+  }
+  return true;
+}
+__name(finishPaidRouteReservation, "finishPaidRouteReservation");
+__name2(finishPaidRouteReservation, "finishPaidRouteReservation");
+async function calculateDrivingRoute(env, trip) {
+  const apiKey = String(env.ORS_API_KEY || "").trim();
+  if (!apiKey) {
+    throw new Error("ORS_API_KEY_NOT_CONFIGURED");
+  }
+  const startLon = Number(trip.start_lon);
+  const startLat = Number(trip.start_lat);
+  const endLon = Number(trip.end_lon);
+  const endLat = Number(trip.end_lat);
+  if (!Number.isFinite(startLon) || !Number.isFinite(startLat) || !Number.isFinite(endLon) || !Number.isFinite(endLat)) {
+    throw new Error("INVALID_TRIP_COORDINATES");
+  }
+  const url = "https://api.heigit.org/openrouteservice/v2/directions/driving-car/geojson";
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4e4);
+  try {
+    let response;
+    for (const radius of [350, 3e3]) {
+      response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": apiKey,
+          "Content-Type": "application/json",
+          "Accept": "application/geo+json"
+        },
+        body: JSON.stringify({
+          coordinates: [
+            [startLon, startLat],
+            [endLon, endLat]
+          ],
+          radiuses: [radius, radius],
+          instructions: false
+        }),
+        signal: controller.signal
+      });
+      console.log("ORS_RESPONSE_STATUS:", response.status, "RADIUS:", radius);
+      if (response.ok) break;
+      const errorText = await response.text();
+      console.error("ORS_ROUTING_ERROR:", response.status, errorText.slice(0, 500));
+      if (response.status !== 404 || radius === 3e3) {
+        throw new Error("ORS_HTTP_" + response.status);
+      }
+    }
+    const data = await response.json();
+    const route = data.features?.[0];
+    if (!route || !Array.isArray(route.geometry?.coordinates) || route.geometry.coordinates.length < 2) {
+      throw new Error("NO_DRIVING_ROUTE");
+    }
+    const summary = route.properties?.summary;
+    if (!summary || !Number.isFinite(Number(summary.distance)) || !Number.isFinite(Number(summary.duration))) {
+      throw new Error("INVALID_ROUTE_SUMMARY");
+    }
+    return {
+      km: Number(summary.distance) / 1e3,
+      minutes: Number(summary.duration) / 60,
+      // Keep the existing bot format: [latitude, longitude].
+      points: route.geometry.coordinates.map((pair) => [
+        Number(pair[1]),
+        Number(pair[0])
+      ])
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+__name(calculateDrivingRoute, "calculateDrivingRoute");
+__name2(calculateDrivingRoute, "calculateDrivingRoute");
+function distanceFromRoute(points, lat, lon) {
+  let best = Infinity;
+  let position = 0;
+  let passed = 0;
+  const radians = Math.PI / 180;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1];
+    const b = points[i];
+    const cosine = Math.cos((a[0] + b[0]) / 2 * radians);
+    const x1 = a[1] * cosine * 111.195;
+    const y1 = a[0] * 111.195;
+    const x2 = b[1] * cosine * 111.195;
+    const y2 = b[0] * 111.195;
+    const x = lon * cosine * 111.195;
+    const y = lat * 111.195;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const t = Math.max(0, Math.min(
+      1,
+      ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy || 1)
+    ));
+    const gap = Math.hypot(x - (x1 + t * dx), y - (y1 + t * dy));
+    const segmentKm = distanceKm(a[0], a[1], b[0], b[1]);
+    if (gap < best) {
+      best = gap;
+      position = passed + segmentKm * t;
+    }
+    passed += segmentKm;
+  }
+  return { km: best, position };
+}
+__name(distanceFromRoute, "distanceFromRoute");
+__name2(distanceFromRoute, "distanceFromRoute");
+async function ensureTripResultsTable(db) {
+  await db.prepare(`CREATE TABLE IF NOT EXISTS trip_planner_results (
+
+    chat_id TEXT PRIMARY KEY, station_ids TEXT NOT NULL,
+
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+
+  )`).run();
+}
+__name(ensureTripResultsTable, "ensureTripResultsTable");
+__name2(ensureTripResultsTable, "ensureTripResultsTable");
+async function clearTripResults(db, chat) {
+  await ensureTripResultsTable(db);
+  await db.prepare("DELETE FROM trip_planner_results WHERE chat_id = ?").bind(String(chat)).run();
+}
+__name(clearTripResults, "clearTripResults");
+__name2(clearTripResults, "clearTripResults");
+async function showTripPage(env, chat, offset = 0) {
+  await ensureTripResultsTable(env.DB);
+  const result = await env.DB.prepare("SELECT station_ids FROM trip_planner_results WHERE chat_id = ?").bind(String(chat)).first();
+  if (!result) {
+    await reply(env, chat, "\u0627\u0646\u062A\u0647\u062A \u0646\u062A\u0627\u0626\u062C \u0627\u0644\u0631\u062D\u0644\u0629. \u0627\u0628\u062F\u0623 \u062A\u062E\u0637\u064A\u0637 \u0631\u062D\u0644\u0629 \u062C\u062F\u064A\u062F\u0629.");
+    return;
+  }
+  const data = JSON.parse(result.station_ids);
+  const items = tripDisplayItems(data);
+  const group = items.slice(offset, offset + 3);
+  if (!group.length) return;
+  const rows = await env.DB.prepare("SELECT * FROM stations").all();
+  const byId = new Map((rows.results || []).map((station) => [String(station.id), station]));
+  const stations = group.map((item) => {
+    const station = byId.get(String(item.id));
+    return station ? { ...station, routeGap: item.gap, routeKm: item.km, estimatedBattery: item.estimatedBattery } : null;
+  }).filter(Boolean);
+  if (!stations.length) {
+    await reply(env, chat, "\u062A\u0639\u0630\u0631 \u0639\u0631\u0636 \u0647\u0630\u0647 \u0627\u0644\u0645\u062D\u0637\u0627\u062A\u061B \u0631\u0628\u0645\u0627 \u062A\u063A\u064A\u0631\u062A \u0628\u064A\u0627\u0646\u0627\u062A\u0647\u0627.");
+    return;
+  }
+  const batteryView = !Array.isArray(data) && data.view === "BATTERY";
+  const details = stations.map(
+    (station, index) => {
+      const extra = batteryView && Number.isFinite(Number(station.routeKm)) ? `
+\u{1F6E3}\uFE0F \u0627\u0644\u0645\u0633\u0627\u0641\u0629 \u0645\u0646 \u0627\u0644\u0627\u0646\u0637\u0644\u0627\u0642 \u0639\u0644\u0649 \u0627\u0644\u0645\u0633\u0627\u0631: ${Number(station.routeKm).toFixed(0)} \u0643\u0645 \u062A\u0642\u0631\u064A\u0628\u064B\u0627
+\u{1F50B} \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0627\u0644\u0645\u0642\u062F\u0631\u0629 \u0639\u0646\u062F \u0645\u0648\u0636\u0639 \u0627\u0644\u0645\u062D\u0637\u0629: ${Number(station.estimatedBattery).toFixed(1)}%` : "";
+      return stationText(station, offset + index) + `
+\u2194\uFE0F \u0627\u0644\u0642\u0631\u0628 \u0627\u0644\u062A\u0642\u0631\u064A\u0628\u064A \u0645\u0646 \u0627\u0644\u0645\u0633\u0627\u0631: ${station.routeGap.toFixed(1)} \u0643\u0645` + extra;
+    }
+  ).join("\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n");
+  const markup = directionsKeyboard(stations, offset, false);
+  if (offset + 3 < items.length) markup.inline_keyboard.push([{
+    text: "\u26A1 \u0639\u0631\u0636 3 \u0645\u062D\u0637\u0627\u062A \u0623\u062E\u0631\u0649",
+    callback_data: `trip_more:${offset + 3}`
+  }]);
+  await reply(env, chat, `\u26A1 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0631\u062D\u0644\u0629
+
+${details}
+
+${batteryView ? "\u26A0\uFE0F \u062A\u0646\u0628\u064A\u0647: \u0627\u0644\u0645\u0633\u0627\u0641\u0629 \u0648\u0646\u0633\u0628\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u062A\u0642\u062F\u064A\u0631\u064A\u062A\u0627\u0646 \u0648\u0644\u0627 \u062A\u0634\u0645\u0644\u0627\u0646 \u0627\u0644\u0627\u0644\u062A\u0641\u0627\u0641 \u0627\u0644\u0641\u0639\u0644\u064A \u0644\u0644\u0648\u0635\u0648\u0644 \u0625\u0644\u0649 \u0627\u0644\u0634\u0627\u062D\u0646. \u062A\u0623\u0643\u062F \u0645\u0646 \u062A\u0648\u0641\u0631 \u0627\u062D\u062A\u064A\u0627\u0637\u064A \u0643\u0627\u0641\u064D." : ""}
+
+\u062A\u062D\u0642\u0642 \u0645\u0646 \u062D\u0627\u0644\u0629 \u0627\u0644\u0634\u0627\u062D\u0646 \u0642\u0628\u0644 \u0627\u0644\u0630\u0647\u0627\u0628.`, markup);
+}
+__name(showTripPage, "showTripPage");
+__name2(showTripPage, "showTripPage");
+async function showTripResults(env, chat, trip) {
+  await reply(env, chat, "\u23F3 \u062C\u0627\u0631\u064A \u062D\u0633\u0627\u0628 \u0637\u0631\u064A\u0642 \u0627\u0644\u0642\u064A\u0627\u062F\u0629 \u0648\u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646...");
+  if (!String(env.ORS_API_KEY || "").trim()) {
+    await setTrip(env.DB, chat, { step: "mode_choose" });
+    await reply(env, chat, "\u26A0\uFE0F \u062E\u062F\u0645\u0629 \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0637\u0631\u0642 \u063A\u064A\u0631 \u0645\u0647\u064A\u0623\u0629. \u0623\u0636\u0641 ORS_API_KEY \u0636\u0645\u0646 Secrets \u0641\u064A Cloudflare.", TRIP_MODE_MENU);
+    return false;
+  }
+  let quota;
+  try {
+    quota = await reserveRouteQuota(env.DB, chat);
+  } catch (error) {
+    console.error("Fair-use quota error", error);
+    await setTrip(env.DB, chat, { step: "mode_choose" });
+    await reply(env, chat, "\u26A0\uFE0F \u062A\u0639\u0630\u0631 \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0631\u0635\u064A\u062F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A \u0645\u0624\u0642\u062A\u064B\u0627. \u062D\u0627\u0648\u0644 \u0645\u062C\u062F\u062F\u064B\u0627 \u0644\u0627\u062D\u0642\u064B\u0627.", TRIP_MODE_MENU);
+    return false;
+  }
+  if (!quota.ok) {
+    await setTrip(env.DB, chat, { step: "mode_choose" });
+    await reply(env, chat, quota.message, TRIP_MODE_MENU);
+    return false;
+  }
+  let route;
+  try {
+    route = await calculateDrivingRoute(env, trip);
+  } catch (error) {
+    console.error("Routing failed", error);
+    if (quota?.paidReservationId) {
+      try {
+        await finishPaidRouteReservation(env.DB, quota, "RELEASED");
+      } catch (refundError) {
+        console.error("PAID_ROUTE_REFUND_FAILED", refundError);
+      }
+    }
+    if (quota?.freeTrial) {
+      await env.DB.prepare("DELETE FROM route_free_trials WHERE telegram_user_id=? AND status='RESERVED' AND created_at=?").bind(quota.trialUserId, quota.reservationId).run();
+    }
+    const missing = String(error).includes("ORS_API_KEY_NOT_CONFIGURED");
+    await setTrip(env.DB, chat, { step: "mode_choose" });
+    await reply(env, chat, missing ? "\u26A0\uFE0F \u062E\u062F\u0645\u0629 \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0637\u0631\u0642 \u063A\u064A\u0631 \u0645\u0647\u064A\u0623\u0629. \u0623\u0636\u0641 ORS_API_KEY \u0636\u0645\u0646 Secrets \u0641\u064A \u0625\u0639\u062F\u0627\u062F\u0627\u062A Cloudflare \u062B\u0645 \u0627\u062E\u062A\u0631 \u0646\u0648\u0639 \u0627\u0644\u0634\u062D\u0646 \u0644\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629." : "\u26A0\uFE0F \u062A\u0639\u0630\u0631 \u062D\u0633\u0627\u0628 \u0645\u0633\u0627\u0631 \u0627\u0644\u0642\u064A\u0627\u062F\u0629. \u0627\u062E\u062A\u0631 \u0646\u0648\u0639 \u0627\u0644\u0634\u062D\u0646 \u0644\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0623\u0648 \u0627\u0636\u063A\u0637 \u0631\u062C\u0648\u0639.", TRIP_MODE_MENU);
+    return false;
+  }
+  try {
+    const rows = await env.DB.prepare("SELECT * FROM stations").all();
+    const stations = (rows.results || []).filter(isEligible).filter((station) => matchesMode(station, trip.mode || "ALL")).map((station) => {
+      const near = distanceFromRoute(
+        route.points,
+        Number(station.latitude),
+        Number(station.longitude)
+      );
+      return { ...station, routeGap: near.km, routePosition: near.position };
+    }).filter((station) => station.routeGap <= 15).sort((a, b) => a.routePosition - b.routePosition || a.routeGap - b.routeGap);
+    const heading = `\u{1F5FA}\uFE0F ${trip.start_name} \u2190 ${trip.end_name}
+\u{1F6E3}\uFE0F \u0645\u0633\u0627\u0641\u0629 \u0627\u0644\u0642\u064A\u0627\u062F\u0629: ${route.km.toFixed(0)} \u0643\u0645
+\u23F1\uFE0F \u0627\u0644\u0645\u062F\u0629 \u0627\u0644\u062A\u0642\u0631\u064A\u0628\u064A\u0629: ${Math.round(route.minutes)} \u062F\u0642\u064A\u0642\u0629
+\u26A1 \u0646\u0648\u0639 \u0627\u0644\u0634\u062D\u0646: ${trip.mode}
+\u{1F50C} \u0645\u062D\u0637\u0627\u062A \u0639\u0644\u0649 \u0645\u0642\u0631\u0628\u0629 \u0645\u0646 \u0627\u0644\u0645\u0633\u0627\u0631: ${stations.length}`;
+    if (quota?.freeTrial) {
+      const claimed = await env.DB.prepare("UPDATE route_free_trials SET status='USED', used_at=CURRENT_TIMESTAMP WHERE telegram_user_id=? AND status='RESERVED' AND created_at=?").bind(quota.trialUserId, quota.reservationId).run();
+      if (Number(claimed.meta?.changes || 0) !== 1) {
+        await setTrip(env.DB, chat, { step: "mode_choose" });
+        await reply(env, chat, "\u23F3 \u0627\u0646\u062A\u0647\u062A \u0635\u0644\u0627\u062D\u064A\u0629 \u0645\u062D\u0627\u0648\u0644\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642\u0629. \u0623\u0639\u062F \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0645\u0646 \u062C\u062F\u064A\u062F.", TRIP_MODE_MENU);
+        return false;
+      }
+    }
+    if (quota?.paidReservationId) {
+      const committed = await finishPaidRouteReservation(env.DB, quota, "USED");
+      if (!committed) {
+        await setTrip(env.DB, chat, { step: "mode_choose" });
+        await reply(env, chat, "\u23F3 \u0627\u0646\u062A\u0647\u062A \u0635\u0644\u0627\u062D\u064A\u0629 \u0645\u062D\u0627\u0648\u0644\u0629 \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0633\u0627\u0628\u0642\u0629. \u0623\u0639\u062F \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629.", TRIP_MODE_MENU);
+        return false;
+      }
+    }
+    await reply(env, chat, heading + "\n\n\u2139\uFE0F \u0627\u0644\u0645\u062D\u0637\u0627\u062A \u0636\u0645\u0646 15 \u0643\u0645 \u0647\u0646\u062F\u0633\u064A\u064B\u0627 \u0645\u0646 \u0627\u0644\u0645\u0633\u0627\u0631\u060C \u0648\u0644\u064A\u0633\u062A \u0645\u0633\u0627\u0641\u0629 \u0627\u0644\u062A\u0641\u0627\u0641 \u0628\u0627\u0644\u0633\u064A\u0627\u0631\u0629. \u0642\u062F \u062A\u062A\u0637\u0644\u0628 \u0627\u0644\u0631\u062D\u0644\u0627\u062A \u0627\u0644\u0639\u0627\u0628\u0631\u0629 \u0644\u0644\u062D\u062F\u0648\u062F \u062E\u062F\u0645\u0629 \u0645\u0633\u0627\u0631\u0627\u062A \u062A\u062F\u0639\u0645 \u0627\u0644\u0645\u0639\u0627\u0628\u0631. \u062A\u062D\u0642\u0642 \u0645\u0646 \u0625\u0645\u0643\u0627\u0646\u064A\u0629 \u0627\u0644\u0648\u0635\u0648\u0644 \u0648\u062D\u0627\u0644\u0629 \u0627\u0644\u0634\u0627\u062D\u0646.");
+    await ensureTripResultsTable(env.DB);
+    const battery = tripBatterySummary(trip, route.km);
+    const serialized = JSON.stringify({ view: "ALL", battery, items: stations.map((s) => ({ id: s.id, gap: s.routeGap, km: route.km > 0 ? s.routePosition / Math.max(1e-3, route.points.reduce((sum, p, i) => i ? sum + distanceKm(route.points[i - 1][0], route.points[i - 1][1], p[0], p[1]) : sum, 0)) * route.km : 0 })) });
+    await env.DB.prepare(`INSERT INTO trip_planner_results (chat_id, station_ids, updated_at)
+
+    VALUES (?, ?, CURRENT_TIMESTAMP)
+
+    ON CONFLICT(chat_id) DO UPDATE SET station_ids = excluded.station_ids,
+
+    updated_at = CURRENT_TIMESTAMP`).bind(String(chat), serialized).run();
+    if (battery) {
+      const status = battery.finish >= 20 ? "\u2705 \u064A\u0645\u0643\u0646 \u0627\u0644\u0648\u0635\u0648\u0644 \u0646\u0638\u0631\u064A\u064B\u0627 \u062F\u0648\u0646 \u0634\u062D\u0646 \u0645\u0639 \u0627\u062D\u062A\u064A\u0627\u0637\u064A 20%." : "\u26A0\uFE0F \u064A\u064F\u0646\u0635\u062D \u0628\u0627\u0644\u0634\u062D\u0646 \u0623\u062B\u0646\u0627\u0621 \u0627\u0644\u0631\u062D\u0644\u0629.";
+      await reply(env, chat, `\u{1F50B} \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0639\u0646\u062F \u0627\u0644\u0627\u0646\u0637\u0644\u0627\u0642: ${battery.pct}%
+\u{1F3C1} \u0627\u0644\u0645\u062A\u0648\u0642\u0639 \u0639\u0646\u062F \u0627\u0644\u0648\u0635\u0648\u0644: ${battery.finish.toFixed(1)}%
+\u{1F3AF} \u0645\u0633\u062A\u0648\u0649 \u0627\u0644\u0628\u062D\u062B: ${battery.target.toFixed(1)}% \u0628\u0639\u062F ${battery.targetKm.toFixed(0)} \u0643\u0645 \u062A\u0642\u0631\u064A\u0628\u064B\u0627
+${status}
+
+\u0627\u062E\u062A\u0631 \u0637\u0631\u064A\u0642\u0629 \u0639\u0631\u0636 \u0627\u0644\u0645\u062D\u0637\u0627\u062A:`, TRIP_DISPLAY_MENU);
+    } else {
+      await reply(env, chat, "\u0627\u062E\u062A\u0631 \u0637\u0631\u064A\u0642\u0629 \u0639\u0631\u0636 \u0627\u0644\u0645\u062D\u0637\u0627\u062A:", TRIP_DISPLAY_MENU);
+    }
+    try {
+      await batterySaveRoute(env, chat, route.km);
+    } catch (error) {
+      console.error("BATTERY_ROUTE_SAVE_FAILED", error);
+    }
+    return true;
+  } catch (error) {
+    if (quota?.paidReservationId) {
+      try {
+        await finishPaidRouteReservation(env.DB, quota, "RELEASED");
+      } catch (refundError) {
+        console.error("PAID_ROUTE_REFUND_FAILED", refundError);
+      }
+    }
+    if (quota?.freeTrial) {
+      await env.DB.prepare("DELETE FROM route_free_trials WHERE telegram_user_id=? AND status='RESERVED' AND created_at=?").bind(quota.trialUserId, quota.reservationId).run();
+    }
+    throw error;
+  }
+}
+__name(showTripResults, "showTripResults");
+__name2(showTripResults, "showTripResults");
+async function handleTripMore(env, callback) {
+  const chat = callback.message?.chat?.id;
+  const match = /^trip_more:(\d+)$/.exec(callback.data || "");
+  if (!chat || !match) return;
+  const offset = Number(match[1]);
+  await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: callback.id });
+  if (!Number.isSafeInteger(offset) || offset < 3 || offset > 3e3 || offset % 3 !== 0) return;
+  await showTripPage(env, chat, offset);
+}
+__name(handleTripMore, "handleTripMore");
+__name2(handleTripMore, "handleTripMore");
+async function handleTripText(env, chat, text, trip) {
+  if (text === "\u{1F519} \u0631\u062C\u0648\u0639") {
+    if (trip.step === "mode_choose") {
+      await setTrip(env.DB, chat, { step: "end_choose" });
+      await reply(env, chat, pointPrompt(false), TRIP_POINT_MENU);
+    } else if (trip.step === "end_text") {
+      await setTrip(env.DB, chat, { step: "end_choose" });
+      await reply(env, chat, pointPrompt(false), TRIP_POINT_MENU);
+    } else if (trip.step === "end_choose") {
+      await setTrip(env.DB, chat, { step: "start_choose" });
+      await reply(env, chat, pointPrompt(true), TRIP_POINT_MENU);
+    } else if (trip.step === "start_text") {
+      await setTrip(env.DB, chat, { step: "start_choose" });
+      await reply(env, chat, pointPrompt(true), TRIP_POINT_MENU);
+    } else {
+      await clearTrip(env.DB, chat);
+      await reply(env, chat, "\u{1F3E0} \u0639\u062F\u062A \u0625\u0644\u0649 \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629.", MAIN_MENU);
+    }
+    return;
+  }
+  if (text === "\u{1F50D} \u0643\u062A\u0627\u0628\u0629 \u0627\u0633\u0645 \u0627\u0644\u0645\u062F\u064A\u0646\u0629" && trip.step.endsWith("_choose")) {
+    await setTrip(env.DB, chat, {
+      step: trip.step.startsWith("start") ? "start_text" : "end_text"
+    });
+    await reply(env, chat, "\u{1F50D} \u0627\u0643\u062A\u0628 \u0627\u0633\u0645 \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0627\u0644\u0622\u0646 (\u0645\u062B\u0644: \u0627\u0644\u062E\u0628\u0631 \u0623\u0648 \u0627\u0644\u0631\u064A\u0627\u0636).", TRIP_POINT_MENU);
+    return;
+  }
+  if (text === "\u{1F4CD} \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u0648\u0642\u0639") {
+    await reply(env, chat, "\u{1F4CD} \u0627\u0636\u063A\u0637 \u0632\u0631 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0645\u0648\u0642\u0639\u060C \u0623\u0648 \u0623\u0631\u0633\u0644 \u0645\u0648\u0642\u0639\u064B\u0627 \u0645\u0646 \u062E\u0631\u064A\u0637\u0629 Telegram.", TRIP_POINT_MENU);
+    return;
+  }
+  if (["start_choose", "start_text", "end_choose", "end_text"].includes(trip.step)) {
+    const point = await findCityPoint(env.DB, text, env);
+    if (point.error) {
+      await reply(env, chat, `\u26A0\uFE0F ${point.error}`, TRIP_POINT_MENU);
+      return;
+    }
+    await acceptTripPoint(env, chat, trip, point);
+    return;
+  }
+  if (trip.step === "mode_choose") {
+    const options = {
+      "\u26A1 \u0634\u062D\u0646 \u0633\u0631\u064A\u0639 DC \u0641\u0642\u0637": "DC",
+      "\u{1F50C} \u0634\u062D\u0646 \u0639\u0627\u062F\u064A AC \u0641\u0642\u0637": "AC",
+      "\u{1F50B} \u062C\u0645\u064A\u0639 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646": "ALL"
+    };
+    if (!options[text]) {
+      await reply(env, chat, "\u0627\u062E\u062A\u0631 \u0646\u0648\u0639 \u0627\u0644\u0634\u062D\u0646 \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629.", TRIP_MODE_MENU);
+      return;
+    }
+    await setTrip(env.DB, chat, { step: "battery_percent", mode: options[text] });
+    await reply(env, chat, "\u{1F50B} \u0643\u0645 \u0646\u0633\u0628\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0627\u0644\u062D\u0627\u0644\u064A\u0629\u061F \u0627\u0643\u062A\u0628 \u0631\u0642\u0645\u064B\u0627 \u0645\u0646 1 \u0625\u0644\u0649 100 (\u0645\u062B\u0627\u0644: 80).");
+    return;
+  }
+  if (["battery_percent", "battery_capacity", "battery_consumption"].includes(trip.step)) {
+    const value = Number(text.replace(",", "."));
+    const rules = { battery_percent: [1, 100, "battery_capacity", "\u{1F50B} \u0645\u0627 \u0633\u0639\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0628\u0627\u0644\u0643\u064A\u0644\u0648\u0648\u0627\u0637 \u0633\u0627\u0639\u0629 kWh\u061F \u0645\u062B\u0627\u0644: 100"], battery_capacity: [5, 250, "battery_consumption", "\u26A1 \u0645\u0627 \u0645\u062A\u0648\u0633\u0637 \u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0627\u0644\u0633\u064A\u0627\u0631\u0629 kWh/100km\u061F \u0645\u062B\u0627\u0644: 22"], battery_consumption: [5, 80, "calculating", ""] };
+    const [min, max, next, prompt] = rules[trip.step];
+    if (!Number.isFinite(value) || value < min || value > max) {
+      await reply(env, chat, `\u26A0\uFE0F \u0623\u062F\u062E\u0644 \u0631\u0642\u0645\u064B\u0627 \u0628\u064A\u0646 ${min} \u0648${max}.`);
+      return;
+    }
+    await setTrip(env.DB, chat, { [trip.step]: value, step: next });
+    if (prompt) {
+      await reply(env, chat, prompt);
+      return;
+    }
+    const current = await getTrip(env.DB, chat);
+    const completed = await showTripResults(env, chat, current);
+    if (completed) await clearTrip(env.DB, chat);
+    return;
+  }
+  await reply(env, chat, pointPrompt(trip.step.startsWith("start")), TRIP_POINT_MENU);
+}
+__name(handleTripText, "handleTripText");
+__name2(handleTripText, "handleTripText");
+var ADMIN_USER_ID = "1049301680";
+var PLANS = {
+  SILVER: { name: "\u{1F948} \u0627\u0644\u0641\u0636\u064A\u0629", price: 9, routes: 10 },
+  GOLD: { name: "\u{1F947} \u0627\u0644\u0630\u0647\u0628\u064A\u0629", price: 19, routes: 30 },
+  VIP: { name: "\u{1F48E} VIP", price: 39, routes: 100 }
+};
+var MEMBERSHIP_MENU_LABEL = "\u{1F48E} \u0639\u0636\u0648\u064A\u062A\u064A \u0648\u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643\u0627\u062A";
+function isPrivate(message) {
+  return message?.chat?.type === "private";
+}
+__name(isPrivate, "isPrivate");
+__name2(isPrivate, "isPrivate");
+function subscriptionKeyboard() {
+  return { inline_keyboard: [
+    [{ text: "\u{1F948} \u0627\u0644\u0641\u0636\u064A\u0629 \u2014 9 \u0631.\u0633 / 30 \u064A\u0648\u0645", callback_data: "sub_plan:SILVER" }],
+    [{ text: "\u{1F947} \u0627\u0644\u0630\u0647\u0628\u064A\u0629 \u2014 19 \u0631.\u0633 / 30 \u064A\u0648\u0645", callback_data: "sub_plan:GOLD" }],
+    [{ text: "\u{1F48E} VIP \u2014 39 \u0631.\u0633 / 30 \u064A\u0648\u0645", callback_data: "sub_plan:VIP" }],
+    [{ text: "\u{1F4CB} \u062D\u0627\u0644\u0629 \u0637\u0644\u0628\u0627\u062A\u064A", callback_data: "sub_status" }]
+  ] };
+}
+__name(subscriptionKeyboard, "subscriptionKeyboard");
+__name2(subscriptionKeyboard, "subscriptionKeyboard");
+async function readRouteUsage(db, userId) {
+  await ensureRouteQuotaTables(db);
+  const trial = await db.prepare("SELECT status FROM route_free_trials WHERE telegram_user_id=?").bind(String(userId)).first();
+  const record = await db.prepare(
+    "SELECT window_start, used FROM route_fair_use_users WHERE chat_id = ?"
+  ).bind(String(userId)).first();
+  const now = Math.floor(Date.now() / 1e3);
+  const started = Number(record?.window_start);
+  if (!record || !Number.isFinite(started) || started + 86400 <= now) {
+    return { used: 0, resetsAt: null, trialUsed: trial?.status === "USED" };
+  }
+  return { used: Math.max(0, Number(record.used) || 0), resetsAt: started + 86400, trialUsed: trial?.status === "USED" };
+}
+__name(readRouteUsage, "readRouteUsage");
+__name2(readRouteUsage, "readRouteUsage");
+async function subscriptionOverview(env, userId) {
+  const row = await env.DB.prepare("SELECT plan, expires_at FROM subscriptions WHERE telegram_user_id = ?").bind(String(userId)).first();
+  const isOwnerVipPlus = String(userId) === ADMIN_USER_ID && row?.plan === "VIP_PLUS";
+  const active = row && PLANS[row.plan] && row.expires_at && Date.parse(row.expires_at) > Date.now();
+  const plan = active ? PLANS[row.plan] : null;
+  const limit = plan ? plan.routes : ROUTES_PER_USER_24H;
+  const usage = await readRouteUsage(env.DB, userId);
+  const remaining = plan ? Math.max(0, limit - usage.used) : usage.trialUsed ? 0 : 1;
+  const displayTime = /* @__PURE__ */ __name2((iso) => new Intl.DateTimeFormat("ar-SA", {
+    timeZone: "Asia/Riyadh",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  }).format(new Date(iso)), "displayTime");
+  const renewal = usage.resetsAt ? displayTime(usage.resetsAt * 1e3) + " (\u0628\u062A\u0648\u0642\u064A\u062A \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629)" : "\u0628\u0639\u062F 24 \u0633\u0627\u0639\u0629 \u0645\u0646 \u0623\u0648\u0644 \u0645\u062D\u0627\u0648\u0644\u0629 \u062C\u062F\u064A\u062F\u0629";
+  const expiry = plan ? `
+\u{1F4C5} \u062A\u0646\u062A\u0647\u064A \u0627\u0644\u0639\u0636\u0648\u064A\u0629: ${displayTime(row.expires_at)} (\u0628\u062A\u0648\u0642\u064A\u062A \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629)` : "";
+  if (isOwnerVipPlus) {
+    const message2 = `\u{1F451} \u0639\u0636\u0648\u064A\u062A\u0643 \u0627\u0644\u062D\u0627\u0644\u064A\u0629: VIP+ \u267E\uFE0F
+
+\u{1F5FA}\uFE0F \u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A: \u267E\uFE0F \u063A\u064A\u0631 \u0645\u062D\u062F\u0648\u062F
+\u2705 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645\u0629 \u062E\u0644\u0627\u0644 24 \u0633\u0627\u0639\u0629: ${usage.used}
+\u{1F50B} \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A \u0627\u0644\u0645\u062A\u0628\u0642\u064A\u0629: \u267E\uFE0F \u063A\u064A\u0631 \u0645\u062D\u062F\u0648\u062F
+\u{1F504} \u062A\u062C\u062F\u064A\u062F \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A: \u063A\u064A\u0631 \u0645\u0637\u0644\u0648\u0628
+\u{1F4C5} \u0627\u0646\u062A\u0647\u0627\u0621 \u0627\u0644\u0639\u0636\u0648\u064A\u0629: \u267E\uFE0F \u0645\u062F\u0649 \u0627\u0644\u062D\u064A\u0627\u0629
+
+\u{1F6E1}\uFE0F \u062A\u062E\u0636\u0639 \u0627\u0644\u0631\u062D\u0644\u0627\u062A \u0644\u062D\u062F\u0648\u062F \u062D\u0645\u0627\u064A\u0629 \u062E\u062F\u0645\u0629 \u0627\u0644\u0645\u0633\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0627\u0645\u0629.
+\u{1F512} \u0647\u0630\u0647 \u0627\u0644\u0639\u0636\u0648\u064A\u0629 \u062E\u0627\u0635\u0629 \u0628\u0645\u0627\u0644\u0643 \u0627\u0644\u0628\u0648\u062A \u0648\u0644\u0627 \u062A\u064F\u0639\u0631\u0636 \u0644\u0644\u0628\u064A\u0639.`;
+    await reply(env, userId, message2, subscriptionKeyboard());
+    return;
+  }
+  if (!plan) {
+    const message2 = `\u{1F48E} \u0639\u0636\u0648\u064A\u062A\u064A \u0648\u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643\u0627\u062A
+
+\u0639\u0636\u0648\u064A\u062A\u0643 \u0627\u0644\u062D\u0627\u0644\u064A\u0629: \u{1F193} \u0645\u062C\u0627\u0646\u064A\u0629
+\u{1F5FA}\uFE0F \u0627\u0644\u062A\u062C\u0631\u0628\u0629 \u0627\u0644\u0645\u062C\u0627\u0646\u064A\u0629: ${usage.trialUsed ? "\u0645\u0633\u062A\u062E\u062F\u0645\u0629" : "\u0645\u062A\u0627\u062D\u0629"}
+\u{1F50B} \u0627\u0644\u062A\u062C\u0627\u0631\u0628 \u0627\u0644\u0645\u062A\u0628\u0642\u064A\u0629: ${remaining}
+\u{1F512} \u0627\u0644\u062A\u062C\u0631\u0628\u0629 \u0645\u062A\u0627\u062D\u0629 \u0645\u0631\u0629 \u0648\u0627\u062D\u062F\u0629 \u0644\u0643\u0644 \u062D\u0633\u0627\u0628 \u0648\u0644\u0627 \u062A\u062A\u062C\u062F\u062F \u0628\u0639\u062F 24 \u0633\u0627\u0639\u0629.
+
+\u26A1 \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u0645\u062A\u0627\u062D \u0645\u062C\u0627\u0646\u064B\u0627.
+\u064A\u0645\u0643\u0646\u0643 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643 \u0644\u0644\u062D\u0635\u0648\u0644 \u0639\u0644\u0649 \u0631\u062D\u0644\u0627\u062A \u0625\u0636\u0627\u0641\u064A\u0629:`;
+    await reply(env, userId, message2, subscriptionKeyboard());
+    return;
+  }
+  const message = `\u{1F48E} \u0639\u0636\u0648\u064A\u062A\u064A \u0648\u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643\u0627\u062A
+
+\u0639\u0636\u0648\u064A\u062A\u0643 \u0627\u0644\u062D\u0627\u0644\u064A\u0629: ${plan ? plan.name : "\u{1F193} \u0645\u062C\u0627\u0646\u064A\u0629"}
+
+\u{1F5FA}\uFE0F \u0625\u062C\u0645\u0627\u0644\u064A \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A: ${limit} \u062E\u0644\u0627\u0644 24 \u0633\u0627\u0639\u0629
+\u2705 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A \u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645\u0629: ${usage.used}
+\u{1F50B} \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A \u0627\u0644\u0645\u062A\u0628\u0642\u064A\u0629: ${remaining}
+\u{1F504} \u062A\u062C\u062F\u064A\u062F \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0627\u062A: ${renewal}${expiry}
+
+\u2139\uFE0F \u064A\u064F\u062D\u062A\u0633\u0628 \u0627\u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645 \u0645\u0646 \u0633\u062C\u0644 \u0637\u0644\u0628\u0627\u062A \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A\u060C \u0648\u0644\u064A\u0633 \u0645\u0646 \u0641\u062A\u062D \u0647\u0630\u0647 \u0627\u0644\u0635\u0641\u062D\u0629.
+\u0643\u0644 \u0627\u0634\u062A\u0631\u0627\u0643 \u0645\u062F\u0641\u0648\u0639 \u0645\u062F\u062A\u0647 30 \u064A\u0648\u0645\u064B\u0627 \u0645\u0646 \u0645\u0648\u0627\u0641\u0642\u0629 \u0627\u0644\u0625\u062F\u0627\u0631\u0629.
+\u0627\u062E\u062A\u0631 \u0627\u0644\u0628\u0627\u0642\u0629 \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u0629:`;
+  await reply(env, userId, message, subscriptionKeyboard());
+}
+__name(subscriptionOverview, "subscriptionOverview");
+__name2(subscriptionOverview, "subscriptionOverview");
+async function subscriptionStatus(env, userId) {
+  const rows = await env.DB.prepare("SELECT id, plan, status, created_at FROM subscription_requests WHERE telegram_user_id = ? ORDER BY id DESC LIMIT 5").bind(String(userId)).all();
+  const list = (rows.results || []).map((r) => `#${r.id} \u2014 ${PLANS[r.plan]?.name || r.plan} \u2014 ${r.status} \u2014 ${r.created_at}`);
+  await reply(env, userId, list.length ? `\u{1F4CB} \u0622\u062E\u0631 \u0637\u0644\u0628\u0627\u062A\u0643:
+${list.join("\n")}` : "\u0644\u064A\u0633 \u0644\u062F\u064A\u0643 \u0637\u0644\u0628\u0627\u062A \u0627\u0634\u062A\u0631\u0627\u0643 \u062D\u062A\u0649 \u0627\u0644\u0622\u0646.", subscriptionKeyboard());
+}
+__name(subscriptionStatus, "subscriptionStatus");
+__name2(subscriptionStatus, "subscriptionStatus");
+async function previewSubscription(env, callback, planCode) {
+  const userId = String(callback.from.id);
+  const plan = PLANS[planCode];
+  if (!plan || callback.message?.chat?.type !== "private" || String(callback.message.chat.id) !== userId) return;
+  const message = `\u{1F48E} \u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0628\u0627\u0642\u0629
+
+${plan.name}
+\u{1F4B0} \u0627\u0644\u0633\u0639\u0631: ${plan.price} \u0631\u064A\u0627\u0644 \u0633\u0639\u0648\u062F\u064A
+\u{1F4C5} \u0627\u0644\u0645\u062F\u0629: 30 \u064A\u0648\u0645\u064B\u0627 \u0645\u0646 \u0645\u0648\u0627\u0641\u0642\u0629 \u0627\u0644\u0625\u062F\u0627\u0631\u0629
+
+\u2728 \u0627\u0644\u0645\u0645\u064A\u0632\u0627\u062A:
+\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 ${plan.routes} \u0631\u062D\u0644\u0627\u062A \u062E\u0644\u0627\u0644 \u0643\u0644 24 \u0633\u0627\u0639\u0629.
+\u{1F504} \u064A\u062A\u062C\u062F\u062F \u0631\u0635\u064A\u062F \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0628\u0639\u062F \u0627\u0646\u062A\u0647\u0627\u0621 \u0646\u0627\u0641\u0630\u0629 \u0627\u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645 (24 \u0633\u0627\u0639\u0629 \u0645\u0646 \u0623\u0648\u0644 \u0645\u062D\u0627\u0648\u0644\u0629).
+\u26A1 \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0645\u0633\u0627\u0631\u0627\u062A \u0645\u0639 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u0627\u0644\u0645\u062A\u0627\u062D\u0629.
+\u{1F30D} \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A \u0636\u0645\u0646 \u062F\u0648\u0644 \u0627\u0644\u062E\u0644\u064A\u062C \u0627\u0644\u0645\u062F\u0639\u0648\u0645\u0629.
+
+\u2139\uFE0F \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0627\u0644\u0645\u062D\u0637\u0627\u062A \u0645\u062A\u0627\u062D \u0623\u064A\u0636\u064B\u0627 \u0644\u0644\u0645\u0633\u062A\u062E\u062F\u0645 \u0627\u0644\u0645\u062C\u0627\u0646\u064A.
+\u{1F6E1}\uFE0F \u062A\u062E\u0636\u0639 \u0627\u0644\u0631\u062D\u0644\u0627\u062A \u0644\u062D\u062F\u0648\u062F \u062D\u0645\u0627\u064A\u0629 \u062E\u062F\u0645\u0629 \u0627\u0644\u0645\u0633\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0627\u0645\u0629.
+
+\u0647\u0644 \u062A\u0631\u063A\u0628 \u0628\u062A\u0623\u0643\u064A\u062F \u0637\u0644\u0628 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643\u061F`;
+  await reply(env, userId, message, { inline_keyboard: [
+    [{ text: `\u2705 \u062A\u0623\u0643\u064A\u062F \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643 \u2014 ${plan.price} \u0631.\u0633`, callback_data: `sub_confirm:${planCode}` }],
+    [{ text: "\u274C \u062A\u0631\u0627\u062C\u0639 \u0639\u0646 \u0627\u0644\u0637\u0644\u0628", callback_data: "sub_back" }]
+  ] });
+}
+__name(previewSubscription, "previewSubscription");
+__name2(previewSubscription, "previewSubscription");
+async function chooseSubscription(env, callback, planCode) {
+  const userId = String(callback.from.id);
+  const plan = PLANS[planCode];
+  if (!plan || callback.message?.chat?.type !== "private" || String(callback.message.chat.id) !== userId) return;
+  const existing = await env.DB.prepare("SELECT id FROM subscription_requests WHERE telegram_user_id = ? AND status IN ('AWAITING_RECEIPT','PENDING') ORDER BY id DESC LIMIT 1").bind(userId).first();
+  if (existing) {
+    await reply(env, userId, `\u26A0\uFE0F \u0644\u062F\u064A\u0643 \u0637\u0644\u0628 \u0645\u0641\u062A\u0648\u062D \u0631\u0642\u0645 #${existing.id}. \u0623\u0631\u0633\u0644 \u0625\u064A\u0635\u0627\u0644 \u0627\u0644\u062A\u062D\u0648\u064A\u0644 \u0647\u0646\u0627 \u0644\u0625\u0643\u0645\u0627\u0644\u0647\u060C \u0623\u0648 \u0627\u0646\u062A\u0638\u0631 \u0645\u0631\u0627\u062C\u0639\u0629 \u0627\u0644\u0625\u062F\u0627\u0631\u0629.`);
+    return;
+  }
+  const bank = String(env.BANK_TRANSFER_DETAILS || "").trim();
+  if (!bank) {
+    await reply(env, userId, "\u23F3 \u0627\u0633\u062A\u0642\u0628\u0627\u0644 \u0637\u0644\u0628\u0627\u062A \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643 \u063A\u064A\u0631 \u0645\u062A\u0627\u062D \u0645\u0624\u0642\u062A\u064B\u0627 \u062D\u062A\u0649 \u062A\u0639\u062A\u0645\u062F \u0627\u0644\u0625\u062F\u0627\u0631\u0629 \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u062A\u062D\u0648\u064A\u0644 \u0627\u0644\u0628\u0646\u0643\u064A.");
+    return;
+  }
+  const inserted = await env.DB.prepare("INSERT INTO subscription_requests (telegram_user_id, telegram_username, customer_name, plan, amount_sar, status) VALUES (?, ?, ?, ?, ?, 'AWAITING_RECEIPT') RETURNING id").bind(userId, callback.from.username || null, [callback.from.first_name, callback.from.last_name].filter(Boolean).join(" ") || null, planCode, plan.price).first();
+  await reply(env, userId, `\u{1F48E} \u0637\u0644\u0628 \u0627\u0634\u062A\u0631\u0627\u0643 #${inserted.id}
+\u0627\u0644\u0628\u0627\u0642\u0629: ${plan.name}
+\u0627\u0644\u0645\u0628\u0644\u063A: ${plan.price} \u0631\u064A\u0627\u0644 \u0633\u0639\u0648\u062F\u064A
+\u0627\u0644\u0645\u062F\u0629: 30 \u064A\u0648\u0645\u064B\u0627 \u0645\u0646 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629
+
+\u{1F3E6} \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u062A\u062D\u0648\u064A\u0644:
+${bank}
+
+\u{1F4F8} \u0628\u0639\u062F \u0627\u0644\u062A\u062D\u0648\u064A\u0644 \u0623\u0631\u0633\u0644 \u0635\u0648\u0631\u0629 \u0627\u0644\u0625\u064A\u0635\u0627\u0644 \u0623\u0648 \u0645\u0644\u0641 PDF \u0641\u064A \u0647\u0630\u0647 \u0627\u0644\u0645\u062D\u0627\u062F\u062B\u0629.
+\u26A0\uFE0F \u0644\u0627 \u064A\u0628\u062F\u0623 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643 \u062D\u062A\u0649 \u062A\u062A\u0623\u0643\u062F \u0627\u0644\u0625\u062F\u0627\u0631\u0629 \u0645\u0646 \u0648\u0635\u0648\u0644 \u0627\u0644\u0645\u0628\u0644\u063A \u0648\u062A\u0648\u0627\u0641\u0642 \u0639\u0644\u0649 \u0627\u0644\u0637\u0644\u0628.`);
+}
+__name(chooseSubscription, "chooseSubscription");
+__name2(chooseSubscription, "chooseSubscription");
+async function receiveSubscriptionReceipt(env, message) {
+  if (!isPrivate(message)) return false;
+  const userId = String(message.from?.id || "");
+  if (!userId || userId !== String(message.chat.id)) return false;
+  const photo = message.photo?.at(-1)?.file_id;
+  const doc = message.document;
+  const isPdf = doc?.mime_type === "application/pdf";
+  if (!photo && !isPdf) return false;
+  const pending = await env.DB.prepare("SELECT id, plan, amount_sar FROM subscription_requests WHERE telegram_user_id = ? AND status = 'AWAITING_RECEIPT' ORDER BY id DESC LIMIT 1").bind(userId).first();
+  if (!pending) return false;
+  const adminGroup = String(env.ADMIN_GROUP_ID || "").trim();
+  if (!/^-\d+$/.test(adminGroup)) {
+    await reply(env, userId, "\u26A0\uFE0F \u062A\u0639\u0630\u0631 \u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0625\u064A\u0635\u0627\u0644 \u0625\u0644\u0649 \u0627\u0644\u0625\u062F\u0627\u0631\u0629 \u062D\u0627\u0644\u064A\u064B\u0627. \u0623\u0639\u062F \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0644\u0627\u062D\u0642\u064B\u0627.");
+    return true;
+  }
+  const plan = PLANS[pending.plan];
+  const caption = `\u{1F48E} \u0637\u0644\u0628 \u0627\u0634\u062A\u0631\u0627\u0643 #${pending.id}
+\u0627\u0644\u0639\u0645\u064A\u0644: ${[message.from.first_name, message.from.last_name].filter(Boolean).join(" ")}
+\u0627\u0644\u0645\u0633\u062A\u062E\u062F\u0645: ${message.from.username ? "@" + message.from.username : "\u063A\u064A\u0631 \u0645\u062A\u0648\u0641\u0631"}
+Telegram ID: ${userId}
+\u0627\u0644\u0628\u0627\u0642\u0629: ${plan?.name || pending.plan}
+\u0627\u0644\u0645\u0628\u0644\u063A: ${pending.amount_sar} \u0631.\u0633
+
+\u26A0\uFE0F \u062A\u062D\u0642\u0642 \u0645\u0646 \u0648\u0635\u0648\u0644 \u0627\u0644\u0645\u0628\u0644\u063A \u0625\u0644\u0649 \u0627\u0644\u0628\u0646\u0643 \u0642\u0628\u0644 \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629.`;
+  const method = photo ? "sendPhoto" : "sendDocument";
+  const receiptId = photo || doc.file_id;
+  await telegram(env.BOT_TOKEN, method, {
+    chat_id: adminGroup,
+    [photo ? "photo" : "document"]: receiptId,
+    caption,
+    reply_markup: { inline_keyboard: [[
+      { text: "\u2705 \u0645\u0648\u0627\u0641\u0642\u0629", callback_data: `sub_approve:${pending.id}` },
+      { text: "\u274C \u0631\u0641\u0636", callback_data: `sub_reject:${pending.id}` }
+    ]] }
+  });
+  await env.DB.prepare("UPDATE subscription_requests SET status='PENDING', receipt_file_id=? WHERE id=? AND telegram_user_id=? AND status='AWAITING_RECEIPT'").bind(receiptId, pending.id, userId).run();
+  await reply(env, userId, `\u2705 \u0627\u0633\u062A\u0644\u0645\u0646\u0627 \u0625\u064A\u0635\u0627\u0644 \u0627\u0644\u0637\u0644\u0628 #${pending.id} \u0648\u0623\u0631\u0633\u0644\u0646\u0627\u0647 \u0644\u0644\u0625\u062F\u0627\u0631\u0629.
+\u23F3 \u0633\u062A\u0635\u0644\u0643 \u0631\u0633\u0627\u0644\u0629 \u0628\u0639\u062F \u0645\u0631\u0627\u062C\u0639\u0629 \u0627\u0644\u062A\u062D\u0648\u064A\u0644.`);
+  return true;
+}
+__name(receiveSubscriptionReceipt, "receiveSubscriptionReceipt");
+__name2(receiveSubscriptionReceipt, "receiveSubscriptionReceipt");
+function subscriptionDateSaudiParts(value) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Riyadh",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    hourCycle: "h23"
+  }).formatToParts(new Date(value));
+  const part = /* @__PURE__ */ __name2((type) => parts.find((p) => p.type === type)?.value || "", "part");
+  const hour = Number(part("hour"));
+  return {
+    date: `${part("day")}/${part("month")}/${part("year")}`,
+    time: `${String(hour % 12 || 12).padStart(2, "0")}:${part("minute")} ${hour < 12 ? "\u0635\u0628\u0627\u062D\u064B\u0627" : "\u0645\u0633\u0627\u0621\u064B"}`
+  };
+}
+__name(subscriptionDateSaudiParts, "subscriptionDateSaudiParts");
+__name2(subscriptionDateSaudiParts, "subscriptionDateSaudiParts");
+async function reviewSubscription(env, callback, approve, requestId) {
+  const adminGroup = String(env.ADMIN_GROUP_ID || "");
+  if (String(callback.from?.id) !== ADMIN_USER_ID || String(callback.message?.chat?.id) !== adminGroup) {
+    await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: callback.id, text: "\u26D4 \u0647\u0630\u0627 \u0627\u0644\u0625\u062C\u0631\u0627\u0621 \u0644\u0644\u0645\u062F\u064A\u0631 \u0641\u0642\u0637.", show_alert: true });
+    return;
+  }
+  const row = await env.DB.prepare("SELECT * FROM subscription_requests WHERE id = ?").bind(requestId).first();
+  if (!row || row.status !== "PENDING" || !PLANS[row.plan]) {
+    await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: callback.id, text: "\u0647\u0630\u0627 \u0627\u0644\u0637\u0644\u0628 \u062A\u0645\u062A \u0645\u0631\u0627\u062C\u0639\u062A\u0647 \u0623\u0648 \u063A\u064A\u0631 \u0635\u0627\u0644\u062D.", show_alert: true });
+    return;
+  }
+  const newStatus = approve ? "APPROVED" : "REJECTED";
+  const updated = await env.DB.prepare("UPDATE subscription_requests SET status=?, admin_user_id=?, reviewed_at=CURRENT_TIMESTAMP WHERE id=? AND status='PENDING' RETURNING id").bind(newStatus, ADMIN_USER_ID, requestId).first();
+  if (!updated) {
+    await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: callback.id, text: "\u062A\u0645\u062A \u0645\u0631\u0627\u062C\u0639\u0629 \u0627\u0644\u0637\u0644\u0628 \u0628\u0627\u0644\u0641\u0639\u0644.", show_alert: true });
+    return;
+  }
+  let expiry = null;
+  let activatedAt = null;
+  if (approve) {
+    const old = await env.DB.prepare("SELECT expires_at FROM subscriptions WHERE telegram_user_id=?").bind(row.telegram_user_id).first();
+    const oldMs = Date.parse(old?.expires_at || "");
+    activatedAt = /* @__PURE__ */ new Date();
+    const startMs = Number.isFinite(oldMs) && oldMs > activatedAt.getTime() ? oldMs : activatedAt.getTime();
+    expiry = new Date(startMs + 30 * 864e5).toISOString();
+    await env.DB.prepare("INSERT INTO subscriptions (telegram_user_id,plan,daily_route_limit,started_at,expires_at,updated_at) VALUES (?,?,?,CURRENT_TIMESTAMP,?,CURRENT_TIMESTAMP) ON CONFLICT(telegram_user_id) DO UPDATE SET plan=excluded.plan,daily_route_limit=excluded.daily_route_limit,started_at=excluded.started_at,expires_at=excluded.expires_at,updated_at=CURRENT_TIMESTAMP").bind(row.telegram_user_id, row.plan, PLANS[row.plan].routes, expiry).run();
+  }
+  await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: callback.id, text: approve ? "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629" : "\u062A\u0645 \u0631\u0641\u0636 \u0627\u0644\u0637\u0644\u0628" });
+  await telegram(env.BOT_TOKEN, "editMessageReplyMarkup", { chat_id: adminGroup, message_id: callback.message.message_id, reply_markup: { inline_keyboard: [] } });
+  await telegram(env.BOT_TOKEN, "sendMessage", { chat_id: adminGroup, text: `${approve ? "\u2705 \u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629" : "\u274C \u062A\u0645 \u0627\u0644\u0631\u0641\u0636"} \u0639\u0644\u0649 \u0627\u0644\u0637\u0644\u0628 #${requestId} \u0628\u0648\u0627\u0633\u0637\u0629 \u0627\u0644\u0645\u062F\u064A\u0631.` });
+  try {
+    const start = approve ? subscriptionDateSaudiParts(activatedAt) : null;
+    const end = approve ? subscriptionDateSaudiParts(expiry) : null;
+    const isRenewal = approve && Date.parse(expiry) - activatedAt.getTime() > 30 * 864e5 + 6e4;
+    const successMessage = approve ? [
+      "\u2705 \u062A\u0645 \u062A\u0641\u0639\u064A\u0644 \u0627\u0634\u062A\u0631\u0627\u0643\u0643 \u0628\u0646\u062C\u0627\u062D!",
+      "",
+      `\u{1F48E} \u0627\u0644\u0628\u0627\u0642\u0629: ${PLANS[row.plan].name}`,
+      `\u{1F4B0} \u0642\u064A\u0645\u0629 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643: ${PLANS[row.plan].price} \u0631\u064A\u0627\u0644 \u0633\u0639\u0648\u062F\u064A`,
+      "",
+      "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+      "\u{1F4C5} \u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643",
+      "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+      "",
+      `\u{1F7E2} \u062A\u0627\u0631\u064A\u062E \u0627\u0644\u062A\u0641\u0639\u064A\u0644: ${start.date}`,
+      `\u{1F558} \u0648\u0642\u062A \u0627\u0644\u062A\u0641\u0639\u064A\u0644: ${start.time}`,
+      "",
+      `\u{1F534} \u062A\u0627\u0631\u064A\u062E \u0627\u0644\u0627\u0646\u062A\u0647\u0627\u0621: ${end.date}`,
+      `\u{1F558} \u0648\u0642\u062A \u0627\u0644\u0627\u0646\u062A\u0647\u0627\u0621: ${end.time}`,
+      "",
+      "\u23F3 \u0645\u062F\u0629 \u0627\u0644\u0628\u0627\u0642\u0629: 30 \u064A\u0648\u0645\u064B\u0627" + (isRenewal ? " (\u0623\u064F\u0636\u064A\u0641\u062A \u0625\u0644\u0649 \u0627\u0644\u0645\u062F\u0629 \u0627\u0644\u0645\u062A\u0628\u0642\u064A\u0629 \u0645\u0646 \u0627\u0634\u062A\u0631\u0627\u0643\u0643)" : ""),
+      "\u{1F1F8}\u{1F1E6} \u0627\u0644\u062A\u0648\u0642\u064A\u062A: \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629",
+      "",
+      "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+      "\u26A1 \u0645\u0645\u064A\u0632\u0627\u062A \u0627\u0634\u062A\u0631\u0627\u0643\u0643",
+      "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+      "",
+      `\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 ${PLANS[row.plan].routes} \u0631\u062D\u0644\u0629 \u062E\u0644\u0627\u0644 24 \u0633\u0627\u0639\u0629.`,
+      "\u{1F504} \u062A\u062A\u062C\u062F\u062F \u0645\u062D\u0627\u0648\u0644\u0627\u062A \u0627\u0644\u062A\u062E\u0637\u064A\u0637 \u0643\u0644 24 \u0633\u0627\u0639\u0629 \u0645\u0646 \u0628\u062F\u0627\u064A\u0629 \u0646\u0627\u0641\u0630\u0629 \u0627\u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645.",
+      "",
+      "\u0634\u0643\u0631\u064B\u0627 \u0644\u0627\u0634\u062A\u0631\u0627\u0643\u0643 \u0641\u064A GCC EV Chargers \u26A1"
+    ].join("\n") : `\u274C \u062A\u0645 \u0631\u0641\u0636 \u0637\u0644\u0628 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643 #${requestId}.
+\u0625\u0630\u0627 \u0643\u0627\u0646 \u0647\u0646\u0627\u0643 \u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u062A\u062D\u0648\u064A\u0644\u060C \u062A\u0648\u0627\u0635\u0644 \u0645\u0639 \u0627\u0644\u0625\u062F\u0627\u0631\u0629.`;
+    await reply(env, row.telegram_user_id, successMessage);
+  } catch (e) {
+    console.error("SUB_CUSTOMER_NOTIFICATION_FAILED", requestId, String(e));
+  }
+}
+__name(reviewSubscription, "reviewSubscription");
+__name2(reviewSubscription, "reviewSubscription");
+async function batteryEnsureTables(db) {
+  await db.prepare(`CREATE TABLE IF NOT EXISTS battery_calculator_state (
+    chat_id TEXT PRIMARY KEY,
+    route_km REAL NOT NULL,
+    stage TEXT NOT NULL DEFAULT 'ready',
+    capacity_kwh REAL,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  )`).run();
+  await db.prepare(`CREATE TABLE IF NOT EXISTS battery_calculator_trials (
+    telegram_user_id TEXT PRIMARY KEY,
+    used INTEGER NOT NULL DEFAULT 0,
+    used_at TEXT
+  )`).run();
+}
+__name(batteryEnsureTables, "batteryEnsureTables");
+__name2(batteryEnsureTables, "batteryEnsureTables");
+async function batteryHasSubscription(db, userId) {
+  const subscription = await db.prepare(
+    "SELECT plan, expires_at FROM subscriptions WHERE telegram_user_id = ?"
+  ).bind(String(userId)).first();
+  return Boolean(
+    subscription && PLANS[subscription.plan] && Date.parse(subscription.expires_at || "") > Date.now()
+  );
+}
+__name(batteryHasSubscription, "batteryHasSubscription");
+__name2(batteryHasSubscription, "batteryHasSubscription");
+async function batteryCanUse(db, userId) {
+  if (await batteryHasSubscription(db, userId)) {
+    return { allowed: true, paid: true };
+  }
+  const trial = await db.prepare(
+    "SELECT used FROM battery_calculator_trials WHERE telegram_user_id = ?"
+  ).bind(String(userId)).first();
+  return {
+    allowed: Number(trial?.used || 0) === 0,
+    paid: false
+  };
+}
+__name(batteryCanUse, "batteryCanUse");
+__name2(batteryCanUse, "batteryCanUse");
+async function batterySaveRoute(env, chat, km) {
+  await batteryEnsureTables(env.DB);
+  await env.DB.prepare(`
+    INSERT INTO battery_calculator_state
+      (chat_id, route_km, stage, capacity_kwh, updated_at)
+    VALUES (?, ?, 'ready', NULL, CURRENT_TIMESTAMP)
+    ON CONFLICT(chat_id) DO UPDATE SET
+      route_km = excluded.route_km,
+      stage = 'ready',
+      capacity_kwh = NULL,
+      updated_at = CURRENT_TIMESTAMP
+  `).bind(String(chat), km).run();
+  const access = await batteryCanUse(env.DB, chat);
+  if (access.allowed) {
+    await reply(
+      env,
+      chat,
+      access.paid ? "\u{1F50B} \u062D\u0627\u0633\u0628\u0629 \u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0645\u062A\u0627\u062D\u0629 \u0636\u0645\u0646 \u0627\u0634\u062A\u0631\u0627\u0643\u0643." : "\u{1F381} \u0644\u062F\u064A\u0643 \u062A\u062C\u0631\u0628\u0629 \u0645\u062C\u0627\u0646\u064A\u0629 \u0648\u0627\u062D\u062F\u0629 \u0644\u062D\u0627\u0633\u0628\u0629 \u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629.",
+      {
+        inline_keyboard: [[{
+          text: access.paid ? "\u{1F50B} \u0627\u062D\u0633\u0628 \u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629" : "\u{1F381} \u062A\u062C\u0631\u0628\u0629 \u0645\u062C\u0627\u0646\u064A\u0629 - \u062D\u0633\u0627\u0628 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629",
+          callback_data: "battery_start"
+        }]]
+      }
+    );
+  }
+}
+__name(batterySaveRoute, "batterySaveRoute");
+__name2(batterySaveRoute, "batterySaveRoute");
+async function batteryStart(env, callback) {
+  const chat = callback.message?.chat?.id;
+  const userId = callback.from?.id;
+  await telegram(env.BOT_TOKEN, "answerCallbackQuery", {
+    callback_query_id: callback.id
+  });
+  if (!chat || !userId || String(chat) !== String(userId)) return;
+  await batteryEnsureTables(env.DB);
+  const state = await env.DB.prepare(
+    "SELECT route_km FROM battery_calculator_state WHERE chat_id = ?"
+  ).bind(String(chat)).first();
+  if (!state || !Number.isFinite(Number(state.route_km))) {
+    await reply(env, chat, "\u26A0\uFE0F \u0627\u062D\u0633\u0628 \u0631\u062D\u0644\u0629 \u062C\u062F\u064A\u062F\u0629 \u0623\u0648\u0644\u0627.");
+    return;
+  }
+  const access = await batteryCanUse(env.DB, userId);
+  if (!access.allowed) {
+    await reply(
+      env,
+      chat,
+      "\u{1F512} \u0627\u0646\u062A\u0647\u062A \u062A\u062C\u0631\u0628\u062A\u0643 \u0627\u0644\u0645\u062C\u0627\u0646\u064A\u0629. \u0627\u0634\u062A\u0631\u0643 \u0644\u0644\u0627\u0633\u062A\u0641\u0627\u062F\u0629 \u0645\u0646 \u062D\u0627\u0633\u0628\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629.",
+      {
+        inline_keyboard: [[{
+          text: "\u2B50 \u0639\u0631\u0636 \u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643\u0627\u062A",
+          callback_data: "battery_subscribe"
+        }]]
+      }
+    );
+    return;
+  }
+  await env.DB.prepare(`
+    UPDATE battery_calculator_state
+    SET stage = 'capacity',
+        capacity_kwh = NULL,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE chat_id = ?
+  `).bind(String(chat)).run();
+  await reply(
+    env,
+    chat,
+    "\u{1F50B} \u0623\u062F\u062E\u0644 \u0633\u0639\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0628\u0627\u0644\u0643\u064A\u0644\u0648\u0648\u0627\u0637 \u0633\u0627\u0639\u0629 (kWh).\n\n\u0645\u062B\u0627\u0644: 75 \u0623\u0648 100\n\n\u064A\u0645\u0643\u0646\u0643 \u0625\u0631\u0633\u0627\u0644 /cancel \u0644\u0644\u0625\u0644\u063A\u0627\u0621."
+  );
+}
+__name(batteryStart, "batteryStart");
+__name2(batteryStart, "batteryStart");
+async function batteryHandleText(env, chat, userId, text) {
+  await batteryEnsureTables(env.DB);
+  const state = await env.DB.prepare(
+    "SELECT * FROM battery_calculator_state WHERE chat_id = ?"
+  ).bind(String(chat)).first();
+  if (!state || !["capacity", "consumption"].includes(state.stage)) {
+    return false;
+  }
+  if (text === "/cancel") {
+    await env.DB.prepare(
+      "UPDATE battery_calculator_state SET stage = 'ready' WHERE chat_id = ?"
+    ).bind(String(chat)).run();
+    await reply(env, chat, "\u062A\u0645 \u0625\u0644\u063A\u0627\u0621 \u062D\u0633\u0627\u0628 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629.");
+    return true;
+  }
+  const value = Number(String(text).trim().replace(",", "."));
+  if (state.stage === "capacity") {
+    if (!Number.isFinite(value) || value < 5 || value > 250) {
+      await reply(env, chat, "\u26A0\uFE0F \u0623\u062F\u062E\u0644 \u0633\u0639\u0629 \u0628\u0637\u0627\u0631\u064A\u0629 \u0635\u062D\u064A\u062D\u0629 \u0628\u064A\u0646 5 \u0648250 kWh.");
+      return true;
+    }
+    await env.DB.prepare(`
+      UPDATE battery_calculator_state
+      SET capacity_kwh = ?,
+          stage = 'consumption',
+          updated_at = CURRENT_TIMESTAMP
+      WHERE chat_id = ?
+    `).bind(value, String(chat)).run();
+    await reply(
+      env,
+      chat,
+      "\u26A1 \u0623\u062F\u062E\u0644 \u0645\u0639\u062F\u0644 \u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0633\u064A\u0627\u0631\u062A\u0643 \u0639\u0646\u062F \u0633\u0631\u0639\u0629 120 \u0643\u0645/\u0633\u0627\u0639\u0629.\n\n\u0627\u0644\u0648\u062D\u062F\u0629: kWh \u0644\u0643\u0644 100 \u0643\u0645\n\u0645\u062B\u0627\u0644: 22\n\n\u064A\u0645\u0643\u0646\u0643 \u0625\u0631\u0633\u0627\u0644 /cancel \u0644\u0644\u0625\u0644\u063A\u0627\u0621."
+    );
+    return true;
+  }
+  if (!Number.isFinite(value) || value < 5 || value > 60) {
+    await reply(env, chat, "\u26A0\uFE0F \u0623\u062F\u062E\u0644 \u0645\u0639\u062F\u0644 \u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0635\u062D\u064A\u062D\u0627 \u0628\u064A\u0646 5 \u064860 kWh/100 km.");
+    return true;
+  }
+  const capacity = Number(state.capacity_kwh);
+  const distance = Number(state.route_km);
+  if (!Number.isFinite(capacity) || !Number.isFinite(distance) || capacity <= 0 || distance <= 0) {
+    await reply(env, chat, "\u26A0\uFE0F \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0631\u062D\u0644\u0629 \u063A\u064A\u0631 \u0645\u0643\u062A\u0645\u0644\u0629. \u0627\u0628\u062F\u0623 \u0631\u062D\u0644\u0629 \u062C\u062F\u064A\u062F\u0629.");
+    return true;
+  }
+  const required = distance * value / 100;
+  const usedPercent = required / capacity * 100;
+  const remainingPercent = 100 - usedPercent;
+  const access = await batteryCanUse(env.DB, userId);
+  if (!access.allowed) {
+    await env.DB.prepare(
+      "UPDATE battery_calculator_state SET stage = 'ready' WHERE chat_id = ?"
+    ).bind(String(chat)).run();
+    await reply(env, chat, "\u{1F512} \u0627\u0646\u062A\u0647\u062A \u062A\u062C\u0631\u0628\u062A\u0643 \u0627\u0644\u0645\u062C\u0627\u0646\u064A\u0629. \u0627\u0634\u062A\u0631\u0643 \u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645 \u0627\u0644\u062D\u0627\u0633\u0628\u0629.");
+    return true;
+  }
+  const batteryTrialClaimId = !access.paid ? crypto.randomUUID() : null;
+  if (!access.paid) {
+    await env.DB.prepare(`
+      INSERT OR IGNORE INTO battery_calculator_trials
+        (telegram_user_id, used)
+      VALUES (?, 0)
+    `).bind(String(userId)).run();
+    const claim = await env.DB.prepare(`
+      UPDATE battery_calculator_trials
+      SET used = 1,
+          used_at = ?
+      WHERE telegram_user_id = ?
+        AND used = 0
+    `).bind(batteryTrialClaimId, String(userId)).run();
+    if ((claim.meta?.changes ?? 0) !== 1) {
+      await reply(env, chat, "\u{1F512} \u062A\u0645 \u0627\u0633\u062A\u062E\u062F\u0627\u0645 \u0627\u0644\u062A\u062C\u0631\u0628\u0629 \u0627\u0644\u0645\u062C\u0627\u0646\u064A\u0629 \u0645\u0633\u0628\u0642\u0627.");
+      return true;
+    }
+  }
+  await env.DB.prepare(`
+    UPDATE battery_calculator_state
+    SET stage = 'ready',
+        updated_at = CURRENT_TIMESTAMP
+    WHERE chat_id = ?
+  `).bind(String(chat)).run();
+  const f = /* @__PURE__ */ __name((n) => n.toFixed(1), "f");
+  const result = [
+    "\u{1F50B} \u0646\u062A\u064A\u062C\u0629 \u062D\u0633\u0627\u0628 \u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629",
+    "",
+    "\u{1F6E3}\uFE0F \u0645\u0633\u0627\u0641\u0629 \u0627\u0644\u0631\u062D\u0644\u0629: " + f(distance) + " \u0643\u0645",
+    "\u{1F697} \u0627\u0644\u0633\u0631\u0639\u0629 \u0627\u0644\u0645\u0641\u062A\u0631\u0636\u0629: 120 \u0643\u0645/\u0633\u0627\u0639\u0629",
+    "\u{1F50B} \u0633\u0639\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629: " + f(capacity) + " kWh",
+    "\u26A1 \u0645\u0639\u062F\u0644 \u0627\u0644\u0627\u0633\u062A\u0647\u0644\u0627\u0643: " + f(value) + " kWh/100 km",
+    "\u{1F53B} \u0627\u0644\u0637\u0627\u0642\u0629 \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629: " + f(required) + " kWh",
+    "\u{1F4CA} \u0646\u0633\u0628\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0627\u0644\u0645\u0633\u062A\u0647\u0644\u0643\u0629: " + f(usedPercent) + "%",
+    "\u{1F50B} \u0627\u0644\u0645\u062A\u0628\u0642\u064A \u0627\u0644\u0645\u062A\u0648\u0642\u0639: " + f(remainingPercent) + "%",
+    "",
+    remainingPercent < 10 ? "\u26A0\uFE0F \u064A\u0646\u0635\u062D \u0628\u0627\u0644\u062A\u0648\u0642\u0641 \u0644\u0644\u0634\u062D\u0646 \u0623\u062B\u0646\u0627\u0621 \u0627\u0644\u0631\u062D\u0644\u0629." : "\u2705 \u0627\u0644\u0627\u0633\u062A\u0647\u0644\u0627\u0643 \u0627\u0644\u062A\u0642\u062F\u064A\u0631\u064A \u0636\u0645\u0646 \u0633\u0639\u0629 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629.",
+    "",
+    "\u2139\uFE0F \u0627\u0644\u062D\u0633\u0627\u0628 \u064A\u0641\u062A\u0631\u0636 \u0627\u0644\u0627\u0646\u0637\u0644\u0627\u0642 \u0628\u0634\u062D\u0646 100% \u0648\u062F\u0648\u0646 \u062A\u0648\u0642\u0641 \u0644\u0644\u0634\u062D\u0646.",
+    "\u0627\u0644\u0646\u062A\u064A\u062C\u0629 \u062A\u0642\u062F\u064A\u0631\u064A\u0629 \u0648\u062A\u062A\u0623\u062B\u0631 \u0628\u0627\u0644\u062D\u0631\u0627\u0631\u0629 \u0648\u0627\u0644\u0631\u064A\u0627\u062D \u0648\u0627\u0644\u062A\u0643\u064A\u064A\u0641 \u0648\u0627\u0644\u062A\u0636\u0627\u0631\u064A\u0633."
+  ].join("\n");
+  try {
+    await reply(env, chat, result);
+  } catch (batterySendError) {
+    if (batteryTrialClaimId) {
+      await env.DB.prepare(`
+        UPDATE battery_calculator_trials
+        SET used = 0,
+            used_at = NULL
+        WHERE telegram_user_id = ?
+          AND used = 1
+          AND used_at = ?
+      `).bind(String(userId), batteryTrialClaimId).run();
+    }
+    throw batterySendError;
+  }
+  return true;
+}
+__name(batteryHandleText, "batteryHandleText");
+__name2(batteryHandleText, "batteryHandleText");
+var BOT_RELEASE_VERSION = "5.18.1";
+var BOT_RELEASE_MESSAGE = [
+  "\u{1F195} \u062A\u062D\u062F\u064A\u062B \u062C\u062F\u064A\u062F \u0644\u0628\u0648\u062A \u0645\u062D\u0637\u0627\u062A \u0634\u062D\u0646 \u0627\u0644\u062E\u0644\u064A\u062C",
+  "",
+  "\u26A1 \u062A\u0645 \u062A\u062D\u062F\u064A\u062B \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629 \u0644\u062A\u0633\u0647\u064A\u0644 \u0627\u0644\u0648\u0635\u0648\u0644 \u0644\u0644\u062E\u062F\u0645\u0627\u062A:",
+  "",
+  "\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0629",
+  "\u{1F4CD} \u0623\u0642\u0631\u0628 \u0645\u062D\u0637\u0629",
+  "\u{1F50B} \u0646\u0648\u0639 \u0627\u0644\u0634\u0627\u062D\u0646",
+  "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629",
+  "\u{1F6E0}\uFE0F \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0648\u0627\u0644\u0628\u0644\u0627\u063A\u0627\u062A",
+  "",
+  "\u2705 \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u062C\u062F\u064A\u062F\u0629 \u062C\u0627\u0647\u0632\u0629 \u0644\u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645.",
+  "\u0644\u0627 \u062A\u062D\u062A\u0627\u062C \u0625\u0644\u0649 \u0643\u062A\u0627\u0628\u0629 /start."
+].join("\n");
+async function notifyReleaseOnce(env, message) {
+  if (message.chat?.type !== "private") return;
+  const chatId = String(message.chat.id);
+  try {
+    const claim = await env.DB.prepare(`
+      INSERT INTO bot_release_notices (
+        chat_id,
+        release_version
+      )
+      VALUES (?, ?)
+      ON CONFLICT(chat_id, release_version) DO NOTHING
+    `).bind(chatId, BOT_RELEASE_VERSION).run();
+    if (Number(claim.meta?.changes ?? 0) !== 1) {
+      return;
+    }
+  } catch (error) {
+    console.error(
+      "Release notification database error:",
+      error
+    );
+    return;
+  }
+  try {
+    await reply(
+      env,
+      message.chat.id,
+      BOT_RELEASE_MESSAGE,
+      MAIN_MENU
+    );
+  } catch (error) {
+    console.error(
+      "Release notification delivery error:",
+      error
+    );
+  }
+}
+__name(notifyReleaseOnce, "notifyReleaseOnce");
+async function handleMessage(env, message) {
+  const chat = message.chat.id;
+  const text = (message.text || "").trim();
+  if (message.chat.type === "group" || message.chat.type === "supergroup") {
+    if (/^\/chatid(?:@GCC_EV_Chargers_bot)?(?:\s|$)/i.test(text)) {
+      await telegram(env.BOT_TOKEN, "sendMessage", {
+        chat_id: chat,
+        text: `\u{1F194} \u0631\u0642\u0645 \u0645\u062C\u0645\u0648\u0639\u0629 \u0627\u0644\u0625\u062F\u0627\u0631\u0629 (Chat ID):
+${chat}`
+      });
+    }
+    return;
+  }
+  await notifyReleaseOnce(env, message);
+  const v518NavigationButtons = [
+    "\u{1F50B} \u0646\u0648\u0639 \u0627\u0644\u0634\u0627\u062D\u0646",
+    "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629",
+    "\u{1F6E0}\uFE0F \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0648\u0627\u0644\u0628\u0644\u0627\u063A\u0627\u062A",
+    "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u062D\u0633\u0628 \u0627\u0644\u062F\u0648\u0644\u0629",
+    "\u{1F50D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629",
+    "\u26A1 \u0634\u062D\u0646 \u0633\u0631\u064A\u0639 DC",
+    "\u{1F50C} \u0634\u062D\u0646 \u0639\u0627\u062F\u064A AC",
+    "\u{1F50B} \u062C\u0645\u064A\u0639 \u0623\u0646\u0648\u0627\u0639 \u0627\u0644\u0634\u062D\u0646",
+    "\u{1F4E2} \u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0648\u0627\u062A\u0633\u0627\u0628",
+    "\u{1F48E} \u0639\u0636\u0648\u064A\u062A\u064A \u0648\u0627\u0644\u0627\u0634\u062A\u0631\u0627\u0643\u0627\u062A",
+    "\u2795 \u0625\u0636\u0627\u0641\u0629 \u0645\u062D\u0637\u0629 \u062C\u062F\u064A\u062F\u0629",
+    "\u{1F6E0}\uFE0F \u0627\u0644\u0625\u0628\u0644\u0627\u063A \u0639\u0646 \u0645\u0634\u0643\u0644\u0629",
+    "\u{1F4CD} \u0623\u0642\u0631\u0628 \u0645\u062D\u0637\u0629"
+  ];
+  if (v518NavigationButtons.includes(text)) {
+    await clearTrip(env.DB, chat);
+    await batteryEnsureTables(env.DB);
+    await env.DB.prepare(
+      "DELETE FROM battery_calculator_state WHERE chat_id = ?"
+    ).bind(String(chat)).run();
+    await env.DB.prepare(
+      "UPDATE user_search_state SET search_active = 0, search_query = NULL WHERE chat_id = ?"
+    ).bind(String(chat)).run();
+  }
+  if ([
+    "\u{1F50B} \u0646\u0648\u0639 \u0627\u0644\u0634\u0627\u062D\u0646",
+    "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629",
+    "\u{1F6E0}\uFE0F \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0648\u0627\u0644\u0628\u0644\u0627\u063A\u0627\u062A",
+    "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u062D\u0633\u0628 \u0627\u0644\u062F\u0648\u0644\u0629",
+    "\u{1F50B} \u062C\u0645\u064A\u0639 \u0623\u0646\u0648\u0627\u0639 \u0627\u0644\u0634\u062D\u0646",
+    "\u{1F4E2} \u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0648\u0627\u062A\u0633\u0627\u0628"
+  ].includes(text)) {
+    await env.DB.prepare(
+      "UPDATE user_search_state SET search_active = 0, search_query = NULL WHERE chat_id = ?"
+    ).bind(String(chat)).run();
+  }
+  if (text === "\u{1F50B} \u0646\u0648\u0639 \u0627\u0644\u0634\u0627\u062D\u0646") {
+    await reply(env, chat, "\u{1F50B} \u0627\u062E\u062A\u0631 \u0646\u0648\u0639 \u0627\u0644\u0634\u0627\u062D\u0646:", CHARGER_TYPE_MENU);
+    return;
+  }
+  if (text === "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629") {
+    await reply(env, chat, "\u{1F30D} \u0627\u062E\u062A\u0631 \u0637\u0631\u064A\u0642\u0629 \u0627\u0644\u0628\u062D\u062B:", SEARCH_MENU);
+    return;
+  }
+  if (text === "\u{1F6E0}\uFE0F \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0648\u0627\u0644\u0628\u0644\u0627\u063A\u0627\u062A") {
+    await reply(env, chat, "\u{1F6E0}\uFE0F \u0627\u062E\u062A\u0631 \u0627\u0644\u062E\u062F\u0645\u0629 \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629:", SERVICES_MENU);
+    return;
+  }
+  if (text === "\u{1F4E2} \u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0648\u0627\u062A\u0633\u0627\u0628") {
+    await reply(
+      env,
+      chat,
+      "\u{1F4E2} \u0627\u0646\u0636\u0645 \u0625\u0644\u0649 \u0645\u062C\u0645\u0648\u0639\u0629 \u062A\u062D\u062F\u064A\u062B\u0627\u062A GCC EV Chargers \u0639\u0644\u0649 \u0648\u0627\u062A\u0633\u0627\u0628.\n\n\u0646\u0646\u0634\u0631 \u0641\u064A\u0647\u0627 \u062A\u062D\u062F\u064A\u062B\u0627\u062A \u062E\u0631\u064A\u0637\u0629 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u0648\u0645\u064A\u0632\u0627\u062A \u0627\u0644\u0628\u0648\u062A \u0627\u0644\u062C\u062F\u064A\u062F\u0629.\n\n\u0627\u0644\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u062E\u0635\u0635\u0629 \u0644\u0644\u0625\u0639\u0644\u0627\u0646\u0627\u062A \u0648\u0627\u0644\u062A\u062D\u062F\u064A\u062B\u0627\u062A \u0641\u0642\u0637.",
+      {
+        inline_keyboard: [[{
+          text: "\u{1F4E2} \u0627\u0644\u0627\u0646\u0636\u0645\u0627\u0645 \u0625\u0644\u0649 \u0645\u062C\u0645\u0648\u0639\u0629 \u0648\u0627\u062A\u0633\u0627\u0628",
+          url: WHATSAPP_UPDATES_URL
+        }]]
+      }
+    );
+    return;
+  }
+  if (text === "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u062D\u0633\u0628 \u0627\u0644\u062F\u0648\u0644\u0629") {
+    await saveState(env.DB, chat, null, "ALL");
+    await reply(env, chat, "\u{1F30D} \u0627\u062E\u062A\u0631 \u0627\u0644\u062F\u0648\u0644\u0629:", COUNTRY_MENU);
+    return;
+  }
+  if (text === "\u{1F50B} \u062C\u0645\u064A\u0639 \u0623\u0646\u0648\u0627\u0639 \u0627\u0644\u0634\u062D\u0646") {
+    await saveState(env.DB, chat, null, "ALL");
+    await reply(
+      env,
+      chat,
+      "\u2705 \u062A\u0645 \u0627\u062E\u062A\u064A\u0627\u0631 \u062C\u0645\u064A\u0639 \u0623\u0646\u0648\u0627\u0639 \u0627\u0644\u0634\u062D\u0646.\n\n\u{1F4CD} \u0634\u0627\u0631\u0643 \u0645\u0648\u0642\u0639\u0643 \u0644\u0639\u0631\u0636 \u0623\u0642\u0631\u0628 \u0627\u0644\u0645\u062D\u0637\u0627\u062A.",
+      CHARGER_TYPE_MENU
+    );
+    return;
+  }
+  if (text === MEMBERSHIP_MENU_LABEL || text === "/subscription") {
+    await subscriptionOverview(env, String(message.from.id));
+    return;
+  }
+  if (await receiveSubscriptionReceipt(env, message)) return;
+  if (text !== "/start" && text !== "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" && text !== "\u{1F195}\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0629" && text !== "\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0629") {
+    if (await batteryHandleText(env, chat, message.from.id, text)) return;
+  }
+  if (text === "/start" || text === "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629") {
+    await batteryEnsureTables(env.DB);
+    await env.DB.prepare(
+      "DELETE FROM battery_calculator_state WHERE chat_id = ?"
+    ).bind(String(chat)).run();
+    await clearTrip(env.DB, chat);
+    await clearTripResults(env.DB, chat);
+  } else if (text === "\u{1F195}\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0629" || text === "\u{1F5FA}\uFE0F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0629") {
+    await batteryEnsureTables(env.DB);
+    await env.DB.prepare(
+      "DELETE FROM battery_calculator_state WHERE chat_id = ?"
+    ).bind(String(chat)).run();
+    await startTrip(env, chat);
+    return;
+  }
+  if (text === "\u{1F3AF} \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u062D\u0633\u0628 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629" || text === "\u26A1 \u062C\u0645\u064A\u0639 \u0627\u0644\u0645\u062D\u0637\u0627\u062A \u0639\u0644\u0649 \u0627\u0644\u0637\u0631\u064A\u0642") {
+    await ensureTripResultsTable(env.DB);
+    const row = await env.DB.prepare("SELECT station_ids FROM trip_planner_results WHERE chat_id = ?").bind(String(chat)).first();
+    if (!row) {
+      await reply(env, chat, "\u0644\u0627 \u062A\u0648\u062C\u062F \u0631\u062D\u0644\u0629 \u0645\u062D\u0641\u0648\u0638\u0629. \u0627\u0628\u062F\u0623 \u062A\u062E\u0637\u064A\u0637 \u0631\u062D\u0644\u0629 \u062C\u062F\u064A\u062F\u0629.");
+      return;
+    }
+    const data = JSON.parse(row.station_ids);
+    if (Array.isArray(data)) {
+      await reply(env, chat, "\u0646\u062A\u0627\u0626\u062C \u0627\u0644\u0631\u062D\u0644\u0629 \u0642\u062F\u064A\u0645\u0629\u061B \u0627\u0628\u062F\u0623 \u0631\u062D\u0644\u0629 \u062C\u062F\u064A\u062F\u0629 \u0644\u0627\u0633\u062A\u062E\u062F\u0627\u0645 \u0639\u0631\u0636 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629.");
+      return;
+    }
+    data.view = text.startsWith("\u{1F3AF}") ? "BATTERY" : "ALL";
+    await env.DB.prepare("UPDATE trip_planner_results SET station_ids = ?, updated_at = CURRENT_TIMESTAMP WHERE chat_id = ?").bind(JSON.stringify(data), String(chat)).run();
+    const items = tripDisplayItems(data);
+    if (!items.length) {
+      await reply(env, chat, data.view === "BATTERY" && data.battery?.finish >= 20 ? "\u2705 \u062D\u0633\u0628 \u0627\u0644\u062A\u0642\u062F\u064A\u0631\u060C \u064A\u0645\u0643\u0646\u0643 \u0627\u0644\u0648\u0635\u0648\u0644 \u0645\u0639 \u0627\u062D\u062A\u064A\u0627\u0637\u064A 20% \u062F\u0648\u0646 \u0627\u0644\u062D\u0627\u062C\u0629 \u0625\u0644\u0649 \u0634\u062D\u0646. \u062A\u0633\u062A\u0637\u064A\u0639 \u0639\u0631\u0636 \u062C\u0645\u064A\u0639 \u0627\u0644\u0645\u062D\u0637\u0627\u062A \u0625\u0630\u0627 \u0631\u063A\u0628\u062A." : "\u26A0\uFE0F \u0644\u0627 \u062A\u0648\u062C\u062F \u0645\u062D\u0637\u0627\u062A \u0645\u0646\u0627\u0633\u0628\u0629 \u0636\u0645\u0646 \u0646\u0637\u0627\u0642 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629 \u0648\u0627\u0644\u0627\u062D\u062A\u064A\u0627\u0637\u064A \u0627\u0644\u0645\u062D\u062F\u062F. \u0644\u0627 \u062A\u0639\u062A\u0645\u062F \u0639\u0644\u0649 \u0647\u0630\u0627 \u0627\u0644\u0645\u0633\u0627\u0631 \u062F\u0648\u0646 \u062E\u0637\u0629 \u0634\u062D\u0646 \u0628\u062F\u064A\u0644\u0629.", TRIP_DISPLAY_MENU);
+      return;
+    }
+    await reply(env, chat, `\u{1F50E} \u0639\u0631\u0636 ${items.length} \u0645\u062D\u0637\u0629 (${data.view === "BATTERY" ? "\u062D\u0633\u0628 \u0627\u0644\u0628\u0637\u0627\u0631\u064A\u0629" : "\u062C\u0645\u064A\u0639 \u0627\u0644\u0645\u062D\u0637\u0627\u062A"}).`, TRIP_DISPLAY_MENU);
+    await showTripPage(env, chat, 0);
+    return;
+  }
+  const activeTrip = await getTrip(env.DB, chat);
+  if (message.location && activeTrip && /^(start|end)_(choose|text)$/.test(activeTrip.step)) {
+    const lat = Number(message.location.latitude);
+    const lon = Number(message.location.longitude);
+    if (!isGccPoint(lat, lon)) {
+      await reply(env, chat, "\u26A0\uFE0F \u062A\u062E\u0637\u064A\u0637 \u0627\u0644\u0631\u062D\u0644\u0627\u062A \u0645\u062A\u0627\u062D \u062D\u0627\u0644\u064A\u064B\u0627 \u062F\u0627\u062E\u0644 \u0646\u0637\u0627\u0642 \u062F\u0648\u0644 \u0627\u0644\u062E\u0644\u064A\u062C \u0641\u0642\u0637.", TRIP_POINT_MENU);
+      return;
+    }
+    await acceptTripPoint(
+      env,
+      chat,
+      activeTrip,
+      { lat, lon, name: "\u0627\u0644\u0645\u0648\u0642\u0639 \u0627\u0644\u0645\u062D\u062F\u062F", approximate: false }
+    );
+    return;
+  }
+  if (activeTrip && text !== "/start" && text !== "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629") {
+    await handleTripText(env, chat, text, activeTrip);
+    return;
+  }
+  if (message.location) {
+    const lat = Number(
+      message.location.latitude
+    );
+    const lon = Number(
+      message.location.longitude
+    );
+    if (!Number.isFinite(lat) || !Number.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+      return;
+    }
+    await saveUserLocation(
+      env.DB,
+      chat,
+      lat,
+      lon
+    );
+    const state = await getState(
+      env.DB,
+      chat
+    );
+    const page = await findPage(
+      env.DB,
+      lat,
+      lon,
+      state,
+      0
+    );
+    if (!page.stations.length) {
+      await reply(
+        env,
+        chat,
+        "\u0644\u0645 \u0646\u062C\u062F \u0645\u062D\u0637\u0627\u062A \u062A\u0637\u0627\u0628\u0642 \u0627\u062E\u062A\u064A\u0627\u0631\u0643. \u0627\u062E\u062A\u0631 \u0628\u062D\u062B\u064B\u0627 \u0622\u062E\u0631 \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629."
+      );
+      return;
+    }
+    const heading = state.country ? `\u26A1 \u0623\u0642\u0631\u0628 \u0627\u0644\u0645\u062D\u0637\u0627\u062A \u0641\u064A ${state.country}` : "\u26A1 \u0623\u0642\u0631\u0628 3 \u0645\u062D\u0637\u0627\u062A \u0634\u062D\u0646 \u0644\u0645\u0648\u0642\u0639\u0643";
+    await reply(
+      env,
+      chat,
+      pageMessage(
+        page.stations,
+        0,
+        heading
+      ),
+      directionsKeyboard(
+        page.stations,
+        0,
+        page.hasMore
+      )
+    );
+    return;
+  }
+  if (text === "/start" || text === "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629") {
+    await saveState(
+      env.DB,
+      chat,
+      null,
+      "ALL"
+    );
+    await reply(
+      env,
+      chat,
+      "\u26A1 \u0623\u0647\u0644\u0627\u064B \u0628\u0643 \u0641\u064A \u062F\u0644\u064A\u0644 \u0645\u062D\u0637\u0627\u062A \u0634\u062D\u0646 \u0627\u0644\u0633\u064A\u0627\u0631\u0627\u062A \u0627\u0644\u0643\u0647\u0631\u0628\u0627\u0626\u064A\u0629 \u0628\u0627\u0644\u062E\u0644\u064A\u062C\n\n\u{1F30D} \u0627\u0643\u062A\u0634\u0641 \u0645\u062D\u0637\u0627\u062A \u0627\u0644\u0634\u062D\u0646 \u0641\u064A \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629 \u0648\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A \u0648\u0642\u0637\u0631 \u0648\u0627\u0644\u0643\u0648\u064A\u062A \u0648\u0627\u0644\u0628\u062D\u0631\u064A\u0646 \u0648\u0639\u064F\u0645\u0627\u0646.\n\n\u{1F4CD} \u0627\u0628\u062D\u062B \u0639\u0646 \u0623\u0642\u0631\u0628 \u0645\u062D\u0637\u0629 \u0634\u062D\u0646\u060C \u0648\u062A\u0639\u0631\u0651\u0641 \u0639\u0644\u0649 \u062A\u0641\u0627\u0635\u064A\u0644\u0647\u0627 \u0648\u0645\u0648\u0642\u0639\u0647\u0627.\n\n\u{1F447} \u0627\u0633\u062A\u0643\u0634\u0641 \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0627\u0644\u0645\u062A\u0627\u062D\u0629 \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0623\u062F\u0646\u0627\u0647."
+    );
+    await reply(env, chat, "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629", MAIN_MENU);
+    return;
+  }
+  if (text === "\u{1F30D} \u0627\u0644\u0628\u062D\u062B \u062D\u0633\u0628 \u0627\u0644\u062F\u0648\u0644\u0629") {
+    await saveState(
+      env.DB,
+      chat,
+      null,
+      "ALL"
+    );
+    await reply(
+      env,
+      chat,
+      "\u{1F30D} \u0627\u062E\u062A\u0631 \u0627\u0644\u062F\u0648\u0644\u0629:",
+      COUNTRY_MENU
+    );
+    return;
+  }
+  if (text === "\u{1F50D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629") {
+    await saveState(
+      env.DB,
+      chat,
+      null,
+      "ALL"
+    );
+    await env.DB.prepare(`
+
+      UPDATE user_search_state
+
+      SET
+
+        search_active = 1,
+
+        search_query = NULL,
+
+        updated_at = CURRENT_TIMESTAMP
+
+      WHERE chat_id = ?
+
+    `).bind(
+      String(chat)
+    ).run();
+    await reply(
+      env,
+      chat,
+      "\u{1F50D} \u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u062D\u0637\u0629 \u0634\u062D\u0646\n\n\u0627\u0643\u062A\u0628 \u0631\u0642\u0645 \u0627\u0644\u0645\u062D\u0637\u0629 \u0623\u0648 \u0627\u0633\u0645 \u0627\u0644\u0645\u062F\u064A\u0646\u0629 \u0623\u0648 \u0627\u0644\u0645\u062D\u0637\u0629 \u0623\u0648 \u0627\u0644\u0634\u0631\u0643\u0629 \u0627\u0644\u0645\u0634\u063A\u0651\u0644\u0629.\n\n\u0623\u0645\u062B\u0644\u0629:\n\u{1F522} 4000\n\u{1F3D9}\uFE0F \u0627\u0644\u062E\u0628\u0631\n\u26A1 EVIQ\n\u{1F4CD} SASCO\n\u26A1 Mall of Qatar\n\u{1F1F6}\u{1F1E6} \u0642\u0637\u0631 \u0645\u0648\u0644\n\n\u0644\u0644\u0625\u0644\u063A\u0627\u0621 \u0627\u0636\u063A\u0637 \u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629.",
+      SEARCH_MENU
+    );
+    return;
+  }
+  if (Object.prototype.hasOwnProperty.call(
+    COUNTRIES,
+    text
+  )) {
+    const country = COUNTRIES[text];
+    await saveState(
+      env.DB,
+      chat,
+      country,
+      "ALL"
+    );
+    await reply(
+      env,
+      chat,
+      `\u2705 \u0627\u062E\u062A\u0631\u062A ${country}.
+
+\u{1F4CD} \u0627\u0636\u063A\u0637 \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0648\u0642\u0639\u064A \u0644\u0644\u0628\u062D\u062B \u0639\u0646 \u0623\u0642\u0631\u0628 3 \u0645\u062D\u0637\u0627\u062A \u062F\u0627\u062E\u0644 \u0627\u0644\u062F\u0648\u0644\u0629.`,
+      COUNTRY_MENU
+    );
+    return;
+  }
+  if (text === "\u{1F4CD} \u0623\u0642\u0631\u0628 \u0645\u062D\u0637\u0629") {
+    await saveState(
+      env.DB,
+      chat,
+      null,
+      "ALL"
+    );
+    await reply(
+      env,
+      chat,
+      "\u{1F4CD} \u0627\u0636\u063A\u0637 \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0648\u0642\u0639\u064A \u0644\u0644\u0628\u062D\u062B \u0639\u0646 \u0623\u0642\u0631\u0628 \u0627\u0644\u0645\u062D\u0637\u0627\u062A."
+    );
+    return;
+  }
+  if (text === "\u26A1 \u0634\u062D\u0646 \u0633\u0631\u064A\u0639 DC" || text === "\u{1F50C} \u0634\u062D\u0646 \u0639\u0627\u062F\u064A AC") {
+    const mode = text.includes("DC") ? "DC" : "AC";
+    await saveState(
+      env.DB,
+      chat,
+      null,
+      mode
+    );
+    await reply(
+      env,
+      chat,
+      `\u2705 \u062A\u0645 \u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0634\u062D\u0646 ${mode}.
+
+\u{1F4CD} \u0627\u0636\u063A\u0637 \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0648\u0642\u0639\u064A \u0644\u0639\u0631\u0636 \u0623\u0642\u0631\u0628 3 \u0645\u062D\u0637\u0627\u062A.`,
+      CHARGER_TYPE_MENU
+    );
+    return;
+  }
+  if (text === "\u{1F6E0}\uFE0F \u0627\u0644\u0625\u0628\u0644\u0627\u063A \u0639\u0646 \u0645\u0634\u0643\u0644\u0629" || text === "\u2795 \u0625\u0636\u0627\u0641\u0629 \u0645\u062D\u0637\u0629 \u062C\u062F\u064A\u062F\u0629") {
+    await saveState(
+      env.DB,
+      chat,
+      null,
+      "ALL"
+    );
+    const title = text === "\u{1F6E0}\uFE0F \u0627\u0644\u0625\u0628\u0644\u0627\u063A \u0639\u0646 \u0645\u0634\u0643\u0644\u0629" ? "\u{1F6E0}\uFE0F \u0646\u0645\u0648\u0630\u062C \u0627\u0644\u0628\u0644\u0627\u063A\u0627\u062A" : "\u2795 \u0625\u0636\u0627\u0641\u0629 \u0645\u062D\u0637\u0629 \u0634\u062D\u0646 \u062C\u062F\u064A\u062F\u0629";
+    await reply(
+      env,
+      chat,
+      `${title}
+
+\u0627\u0641\u062A\u062D \u0627\u0644\u0646\u0645\u0648\u0630\u062C \u0648\u0627\u062E\u062A\u0631 \u0646\u0648\u0639 \u0627\u0644\u0628\u0644\u0627\u063A \u0627\u0644\u0645\u0646\u0627\u0633\u0628.
+\u0646\u0641\u0633 \u0627\u0644\u0646\u0645\u0648\u0630\u062C \u0645\u062E\u0635\u0635 \u0644\u0644\u0623\u0639\u0637\u0627\u0644 \u0648\u0625\u0636\u0627\u0641\u0629 \u0627\u0644\u0645\u062D\u0637\u0627\u062A.`,
+      {
+        inline_keyboard: [[{
+          text: "\u{1F4DD} \u0641\u062A\u062D \u0646\u0645\u0648\u0630\u062C Google",
+          url: FORM_URL
+        }]]
+      }
+    );
+    return;
+  }
+  const searchState = await env.DB.prepare(`
+
+    SELECT search_active
+
+    FROM user_search_state
+
+    WHERE chat_id = ?
+
+  `).bind(
+    String(chat)
+  ).first();
+  if (Number(searchState?.search_active) === 1 && text && !text.startsWith("/")) {
+    const keyword = text.slice(0, 100);
+    const page = await searchStations(
+      env.DB,
+      keyword,
+      0
+    );
+    await env.DB.prepare(`
+
+      UPDATE user_search_state
+
+      SET
+
+        search_query = ?,
+
+        page_offset = 0,
+
+        updated_at = CURRENT_TIMESTAMP
+
+      WHERE chat_id = ?
+
+    `).bind(
+      keyword,
+      String(chat)
+    ).run();
+    if (!page.stations.length) {
+      await reply(
+        env,
+        chat,
+        `\u{1F50D} \u0644\u0645 \u0646\u062C\u062F \u0645\u062D\u0637\u0627\u062A \u062A\u0637\u0627\u0628\u0642: ${keyword}
+
+\u062C\u0631\u0651\u0628 \u0631\u0642\u0645 \u0627\u0644\u0645\u062D\u0637\u0629 \u0623\u0648 \u0627\u0633\u0645\u0647\u0627 \u0628\u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0623\u0648 \u0627\u0644\u0625\u0646\u062C\u0644\u064A\u0632\u064A\u0629.`
+      );
+      return;
+    }
+    await reply(
+      env,
+      chat,
+      pageMessage(
+        page.stations,
+        0,
+        `\u{1F50D} \u0646\u062A\u0627\u0626\u062C \u0627\u0644\u0628\u062D\u062B \u0639\u0646: ${keyword}`
+      ),
+      directionsKeyboard(
+        page.stations,
+        0,
+        page.hasMore,
+        "search_more"
+      )
+    );
+    return;
+  }
+  await reply(
+    env,
+    chat,
+    "\u0627\u062E\u062A\u0631 \u0625\u062D\u062F\u0649 \u0627\u0644\u062E\u062F\u0645\u0627\u062A \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629."
+  );
+}
+__name(handleMessage, "handleMessage");
+__name2(handleMessage, "handleMessage");
+async function handleSearchMore(env, callback) {
+  const chat = callback.message?.chat?.id;
+  if (!chat) {
+    return;
+  }
+  const match = /^search_more:(\d+)$/.exec(
+    callback.data || ""
+  );
+  if (!match) {
+    return;
+  }
+  const requestedOffset = Number(match[1]);
+  if (!Number.isSafeInteger(requestedOffset) || requestedOffset < 3 || requestedOffset > 3e3 || requestedOffset % 3 !== 0) {
+    return;
+  }
+  const state = await env.DB.prepare(`
+
+    SELECT
+
+      search_active,
+
+      search_query,
+
+      page_offset
+
+    FROM user_search_state
+
+    WHERE chat_id = ?
+
+  `).bind(
+    String(chat)
+  ).first();
+  if (Number(state?.search_active) !== 1 || !state?.search_query) {
+    await telegram(
+      env.BOT_TOKEN,
+      "answerCallbackQuery",
+      {
+        callback_query_id: callback.id,
+        text: "\u0627\u0628\u062F\u0623 \u0628\u062D\u062B\u064B\u0627 \u062C\u062F\u064A\u062F\u064B\u0627 \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629."
+      }
+    );
+    return;
+  }
+  const currentOffset = Number(
+    state.page_offset || 0
+  );
+  if (requestedOffset !== currentOffset + 3) {
+    await telegram(
+      env.BOT_TOKEN,
+      "answerCallbackQuery",
+      {
+        callback_query_id: callback.id,
+        text: "\u0647\u0630\u0647 \u0635\u0641\u062D\u0629 \u0642\u062F\u064A\u0645\u0629. \u0627\u0633\u062A\u062E\u062F\u0645 \u0623\u062D\u062F\u062B \u0627\u0644\u0646\u062A\u0627\u0626\u062C."
+      }
+    );
+    return;
+  }
+  const page = await searchStations(
+    env.DB,
+    state.search_query,
+    requestedOffset
+  );
+  if (!page.stations.length) {
+    await telegram(
+      env.BOT_TOKEN,
+      "answerCallbackQuery",
+      {
+        callback_query_id: callback.id,
+        text: "\u0644\u0627 \u062A\u0648\u062C\u062F \u0646\u062A\u0627\u0626\u062C \u0625\u0636\u0627\u0641\u064A\u0629."
+      }
+    );
+    return;
+  }
+  const update = await env.DB.prepare(`
+
+    UPDATE user_search_state
+
+    SET
+
+      page_offset = ?,
+
+      updated_at = CURRENT_TIMESTAMP
+
+    WHERE chat_id = ?
+
+      AND page_offset = ?
+
+      AND search_active = 1
+
+      AND search_query = ?
+
+  `).bind(
+    requestedOffset,
+    String(chat),
+    currentOffset,
+    state.search_query
+  ).run();
+  if ((update.meta?.changes ?? 0) !== 1) {
+    await telegram(
+      env.BOT_TOKEN,
+      "answerCallbackQuery",
+      {
+        callback_query_id: callback.id,
+        text: "\u062A\u0645 \u0639\u0631\u0636 \u0647\u0630\u0647 \u0627\u0644\u0635\u0641\u062D\u0629 \u0633\u0627\u0628\u0642\u064B\u0627."
+      }
+    );
+    return;
+  }
+  await telegram(
+    env.BOT_TOKEN,
+    "answerCallbackQuery",
+    {
+      callback_query_id: callback.id
+    }
+  );
+  await reply(
+    env,
+    chat,
+    pageMessage(
+      page.stations,
+      requestedOffset,
+      `\u{1F50D} \u0646\u062A\u0627\u0626\u062C \u0625\u0636\u0627\u0641\u064A\u0629: ${state.search_query}`
+    ),
+    directionsKeyboard(
+      page.stations,
+      requestedOffset,
+      page.hasMore,
+      "search_more"
+    )
+  );
+}
+__name(handleSearchMore, "handleSearchMore");
+__name2(handleSearchMore, "handleSearchMore");
+async function handleMoreStations(env, callback) {
+  const chat = callback.message?.chat?.id;
+  if (!chat) {
+    return;
+  }
+  const match = /^more_stations:(\d+)$/.exec(
+    callback.data || ""
+  );
+  if (!match) {
+    return;
+  }
+  const requestedOffset = Number(match[1]);
+  if (!Number.isSafeInteger(requestedOffset) || requestedOffset < 3 || requestedOffset > 3e3 || requestedOffset % 3 !== 0) {
+    return;
+  }
+  const state = await getState(
+    env.DB,
+    chat
+  );
+  if (state.last_latitude == null || state.last_longitude == null) {
+    await reply(
+      env,
+      chat,
+      "\u{1F4CD} \u0623\u0631\u0633\u0644 \u0645\u0648\u0642\u0639\u0643 \u0623\u0648\u0644\u064B\u0627 \u0644\u0639\u0631\u0636 \u0627\u0644\u0645\u0632\u064A\u062F \u0645\u0646 \u0627\u0644\u0645\u062D\u0637\u0627\u062A."
+    );
+    return;
+  }
+  const currentOffset = Number(
+    state.page_offset || 0
+  );
+  if (requestedOffset !== currentOffset + 3) {
+    await telegram(
+      env.BOT_TOKEN,
+      "answerCallbackQuery",
+      {
+        callback_query_id: callback.id,
+        text: "\u0647\u0630\u0647 \u0635\u0641\u062D\u0629 \u0642\u062F\u064A\u0645\u0629. \u0627\u0633\u062A\u062E\u062F\u0645 \u0632\u0631 \u0639\u0631\u0636 \u0627\u0644\u0645\u0632\u064A\u062F \u0641\u064A \u0623\u062D\u062F\u062B \u0627\u0644\u0646\u062A\u0627\u0626\u062C.",
+        show_alert: false
+      }
+    );
+    return;
+  }
+  const page = await findPage(
+    env.DB,
+    Number(state.last_latitude),
+    Number(state.last_longitude),
+    state,
+    requestedOffset
+  );
+  if (!page.stations.length) {
+    await telegram(
+      env.BOT_TOKEN,
+      "answerCallbackQuery",
+      {
+        callback_query_id: callback.id,
+        text: "\u0648\u0635\u0644\u062A \u0625\u0644\u0649 \u0622\u062E\u0631 \u0645\u062D\u0637\u0629 \u0645\u062A\u0627\u062D\u0629."
+      }
+    );
+    return;
+  }
+  const update = await env.DB.prepare(`
+
+    UPDATE user_search_state
+
+    SET
+
+      page_offset = ?,
+
+      updated_at = CURRENT_TIMESTAMP
+
+    WHERE chat_id = ?
+
+      AND page_offset = ?
+
+      AND last_latitude IS NOT NULL
+
+      AND last_longitude IS NOT NULL
+
+  `).bind(
+    requestedOffset,
+    String(chat),
+    currentOffset
+  ).run();
+  if ((update.meta?.changes ?? 0) !== 1) {
+    await telegram(
+      env.BOT_TOKEN,
+      "answerCallbackQuery",
+      {
+        callback_query_id: callback.id,
+        text: "\u062A\u0645 \u0639\u0631\u0636 \u0647\u0630\u0647 \u0627\u0644\u0635\u0641\u062D\u0629 \u0633\u0627\u0628\u0642\u064B\u0627."
+      }
+    );
+    return;
+  }
+  await telegram(
+    env.BOT_TOKEN,
+    "answerCallbackQuery",
+    {
+      callback_query_id: callback.id
+    }
+  );
+  await reply(
+    env,
+    chat,
+    pageMessage(
+      page.stations,
+      requestedOffset,
+      "\u26A1 \u0645\u062D\u0637\u0627\u062A \u0634\u062D\u0646 \u0625\u0636\u0627\u0641\u064A\u0629"
+    ),
+    directionsKeyboard(
+      page.stations,
+      requestedOffset,
+      page.hasMore
+    )
+  );
+}
+__name(handleMoreStations, "handleMoreStations");
+__name2(handleMoreStations, "handleMoreStations");
+var GeoRateLimiter = class extends DurableObject {
+  static {
+    __name(this, "GeoRateLimiter");
+  }
+  static {
+    __name2(this, "GeoRateLimiter");
+  }
+  constructor(ctx, env) {
+    super(ctx, env);
+    this.ctx = ctx;
+    this.env = env;
+  }
+  async acquire() {
+    return this.ctx.storage.transaction(async (txn) => {
+      const now = Date.now();
+      const next = Number(await txn.get("nextRequestAt") || 0);
+      if (now < next) {
+        return { allowed: false, retryAfterMs: next - now };
+      }
+      await txn.put("nextRequestAt", now + 1100);
+      return { allowed: true };
+    });
+  }
+};
+var GCC_EV_Chargers_V5_12_default = {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.pathname === "/test-city" && env.TEST_MODE === "true") {
+      const city = url.searchParams.get("name") || "";
+      const result = await findCityPoint(null, city, env);
+      return Response.json(result);
+    }
+    if (request.method === "GET" && url.pathname === "/") {
+      if (!env.DB) {
+        return new Response(
+          "Database binding missing",
+          {
+            status: 503
+          }
+        );
+      }
+      try {
+        const row = await env.DB.prepare(
+          "SELECT COUNT(*) AS total FROM stations"
+        ).first();
+        return new Response(
+          `GCC EV Chargers Bot is running! Stations: ${row.total}`
+        );
+      } catch (error) {
+        console.error(
+          "D1 count error",
+          error
+        );
+        return new Response(
+          "Database error",
+          {
+            status: 503
+          }
+        );
+      }
+    }
+    if (request.method !== "POST" || url.pathname !== "/webhook") {
+      return new Response(
+        "Not Found",
+        {
+          status: 404
+        }
+      );
+    }
+    if (!env.BOT_TOKEN || !env.WEBHOOK_SECRET || !env.DB) {
+      return new Response(
+        "Configuration missing",
+        {
+          status: 503
+        }
+      );
+    }
+    if (request.headers.get(
+      "X-Telegram-Bot-Api-Secret-Token"
+    ) !== env.WEBHOOK_SECRET) {
+      return new Response(
+        "Forbidden",
+        {
+          status: 403
+        }
+      );
+    }
+    let update;
+    try {
+      update = await request.json();
+    } catch {
+      return new Response(
+        "Invalid JSON",
+        {
+          status: 400
+        }
+      );
+    }
+    try {
+      if (update.callback_query) {
+        const callbackData = update.callback_query.data || "";
+        if (/^sub_plan:(SILVER|GOLD|VIP)$/.test(callbackData)) {
+          await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: update.callback_query.id });
+          await previewSubscription(env, update.callback_query, callbackData.split(":")[1]);
+        } else if (/^sub_confirm:(SILVER|GOLD|VIP)$/.test(callbackData)) {
+          await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: update.callback_query.id });
+          await chooseSubscription(env, update.callback_query, callbackData.split(":")[1]);
+        } else if (callbackData === "sub_back") {
+          await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: update.callback_query.id });
+          if (update.callback_query.message?.chat?.type === "private" && String(update.callback_query.message.chat.id) === String(update.callback_query.from.id)) {
+            await subscriptionOverview(env, String(update.callback_query.from.id));
+          }
+        } else if (callbackData === "sub_status") {
+          await telegram(env.BOT_TOKEN, "answerCallbackQuery", { callback_query_id: update.callback_query.id });
+          if (update.callback_query.message?.chat?.type === "private" && String(update.callback_query.message.chat.id) === String(update.callback_query.from.id)) await subscriptionStatus(env, update.callback_query.from.id);
+        } else if (/^sub_(approve|reject):\d+$/.test(callbackData)) {
+          const m = /^sub_(approve|reject):(\d+)$/.exec(callbackData);
+          await reviewSubscription(env, update.callback_query, m[1] === "approve", Number(m[2]));
+        } else if (callbackData.startsWith("search_more:")) {
+          await handleSearchMore(
+            env,
+            update.callback_query
+          );
+        } else if (callbackData === "battery_start") {
+          await batteryStart(env, update.callback_query);
+        } else if (callbackData === "battery_subscribe") {
+          await telegram(env.BOT_TOKEN, "answerCallbackQuery", {
+            callback_query_id: update.callback_query.id
+          });
+          await subscriptionOverview(
+            env,
+            String(update.callback_query.from.id)
+          );
+        } else if (callbackData.startsWith("trip_more:")) {
+          await handleTripMore(env, update.callback_query);
+        } else if (callbackData.startsWith("more_stations:")) {
+          await handleMoreStations(
+            env,
+            update.callback_query
+          );
+        } else {
+          await telegram(
+            env.BOT_TOKEN,
+            "answerCallbackQuery",
+            {
+              callback_query_id: update.callback_query.id
+            }
+          );
+        }
+        return new Response("OK");
+      }
+      if (!update.message?.chat?.id) {
+        return new Response("OK");
+      }
+      await handleMessage(
+        env,
+        update.message
+      );
+      return new Response("OK");
+    } catch (error) {
+      console.error(
+        "Bot processing error",
+        error
+      );
+      return new Response(
+        "Processing error",
+        {
+          status: 500
+        }
+      );
+    }
+  }
+};
+export {
+  GeoRateLimiter,
+  GCC_EV_Chargers_V5_12_default as default
+};
+//# sourceMappingURL=GCC_EV_Chargers_V5_19_1_Fixed.js.map

@@ -1186,10 +1186,16 @@ async function handleMessage(env, message) {
     const mode = text.includes("DC") ? "DC" : "AC"; await saveState(env.DB, chat, null, mode);
     await reply(env, chat, `✅ تم اختيار الشحن ${mode}.\n\n📍 اضغط مشاركة موقعي لعرض أقرب 3 محطات.`, CHARGER_TYPE_MENU); return;
   }
-  if (text === "🛠️ الإبلاغ عن مشكلة" || text === "➕ إضافة محطة جديدة") {
+    if (text === "🛠️ الإبلاغ عن مشكلة" || text === "🛠️ إبلاغ عن مشكلة") {
     await saveState(env.DB, chat, null, "ALL");
-    const title = text === "🛠️ الإبلاغ عن مشكلة" ? "🛠️ نموذج البلاغات" : "➕ إضافة محطة شحن جديدة";
-    await reply(env, chat, `${title}\n\nافتح النموذج واختر نوع البلاغ المناسب.\nنفس النموذج مخصص للأعطال وإضافة المحطات.`, { inline_keyboard: [[{ text: "📝 فتح نموذج Google", url: FORM_URL }]] }); return;
+    await reply(env, chat, "🛠️ نموذج البلاغات\n\nافتح النموذج واختر نوع البلاغ المناسب.\nنفس النموذج مخصص للأعطال وإضافة المحطات.", { inline_keyboard: [[{ text: "📝 فتح نموذج Google", url: FORM_URL }]] }); 
+    return;
+  }
+  
+  if (text === "➕ إضافة محطة جديدة" || text === "➕ إضافة محطة") {
+    await saveState(env.DB, chat, null, "ALL");
+    await reply(env, chat, "➕ إضافة محطة شحن جديدة\n\nافتح النموذج واختر نوع البلاغ المناسب.\nنفس النموذج مخصص للأعطال وإضافة المحطات.", { inline_keyboard: [[{ text: "📝 فتح نموذج Google", url: FORM_URL }]] }); 
+    return;
   }
   const searchState = await env.DB.prepare(`SELECT search_active FROM user_search_state WHERE chat_id = ?`).bind(String(chat)).first();
   if (Number(searchState?.search_active) === 1 && text && !text.startsWith("/")) {

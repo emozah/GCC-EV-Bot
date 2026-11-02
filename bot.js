@@ -24,8 +24,7 @@ var MAIN_MENU = {
 var CHARGER_TYPE_MENU = {
   keyboard: [
     [{ text: "⚡ شحن سريع DC" }, { text: "🔌 شحن عادي AC" }],
-    [{ text: "🔋 جميع أنواع الشحن" }],
-    [{ text: "📍 مشاركة موقعي", request_location: true }],
+    [{ text: "🔋 جميع أنواع الشحن" }, { text: "📍 مشاركة موقعي", request_location: true }],
     [{ text: "🏠 القائمة الرئيسية" }]
   ],
   resize_keyboard: true,
@@ -92,11 +91,10 @@ function tripDisplayItems(data) {
 }
 var COUNTRY_MENU = {
   keyboard: [
-    [{ text: "\u{1F1F8}\u{1F1E6} \u0627\u0644\u0633\u0639\u0648\u062F\u064A\u0629" }, { text: "\u{1F1E6}\u{1F1EA} \u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A" }],
-    [{ text: "\u{1F1F6}\u{1F1E6} \u0642\u0637\u0631" }, { text: "\u{1F1F0}\u{1F1FC} \u0627\u0644\u0643\u0648\u064A\u062A" }],
-    [{ text: "\u{1F1E7}\u{1F1ED} \u0627\u0644\u0628\u062D\u0631\u064A\u0646" }, { text: "\u{1F1F4}\u{1F1F2} \u0639\u064F\u0645\u0627\u0646" }],
-    [{ text: "\u{1F3E0} \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0631\u0626\u064A\u0633\u064A\u0629" }],
-    [{ text: "\u{1F4CD} \u0645\u0634\u0627\u0631\u0643\u0629 \u0645\u0648\u0642\u0639\u064A", request_location: true }]
+    [{ text: "🇸🇦 السعودية" }, { text: "🇦🇪 الإمارات" }],
+    [{ text: "🇶🇦 قطر" }, { text: "🇰🇼 الكويت" }],
+    [{ text: "🇧🇭 البحرين" }, { text: "🇴🇲 عُمان" }],
+        [{ text: "🏠 القائمة الرئيسية" }]
   ],
   resize_keyboard: true,
   is_persistent: true
@@ -979,7 +977,35 @@ async function handleMessage(env, message) {
     await env.DB.prepare("UPDATE user_search_state SET search_active = 0, search_query = NULL WHERE chat_id = ?").bind(String(chat)).run();
   }
   if (text === "🔋 نوع الشاحن") { await reply(env, chat, "🔋 اختر نوع الشاحن:", CHARGER_TYPE_MENU); return; }
-  if (text === "🌍 البحث عن محطة") { await reply(env, chat, "🌍 اختر طريقة البحث:", SEARCH_MENU); return; }
+  if (text === "🌍 البحث عن محطة") { 
+    await reply(env, chat, "🌍 اختر طريقة البحث:", SEARCH_MENU); 
+    return; 
+  }
+
+  if (text === "🔙 رجوع") {
+    const state = await getState(env.DB, chat);
+    if (state.country) {
+      await saveState(env.DB, chat, null, "ALL");
+      await reply(env, chat, "🌍 اختر الدولة:", COUNTRY_MENU);
+    } else {
+      await reply(env, chat, "🏠 القائمة الرئيسية", MAIN_MENU);
+    }
+    return;
+  }  if (text === "🔙 رجوع") {
+    // التحقق مما إذا كان المستخدم في قائمة الدول أم لا
+    const activeTrip = await getTrip(env.DB, chat);
+    // إذا كان المستخدم قد اختار دولة للتو (موجودة في الحالة)
+    const state = await getState(env.DB, chat);
+    if (state.country) {
+      // إذا كان في سياق دولة، نرجع لقائمة البحث
+      await saveState(env.DB, chat, null, "ALL"); // مسح الدولة المختارة
+      await reply(env, chat, "🌍 اختر طريقة البحث:", SEARCH_MENU);
+    } else {
+      // إذا لم يكن في سياق دولة، نرجع للقائمة الرئيسية
+      await reply(env, chat, "🏠 القائمة الرئيسية", MAIN_MENU);
+    }
+    return;
+  }
   if (text === "🛠️ الخدمات والبلاغات") { await reply(env, chat, "🛠️ اختر الخدمة المطلوبة:", SERVICES_MENU); return; }
   if (text === "📢 تحديثات واتساب") { await reply(env, chat, "📢 انضم إلى مجموعة تحديثات GCC EV Chargers على واتساب.\n\nننشر فيها تحديثات خريطة محطات الشحن وميزات البوت الجديدة.\n\nالمجموعة مخصصة للإعلانات والتحديثات فقط.", { inline_keyboard: [[{ text: "📢 الانضمام إلى مجموعة واتساب", url: WHATSAPP_UPDATES_URL }]] }); return; }
   if (text === "🌍 البحث حسب الدولة") { await saveState(env.DB, chat, null, "ALL"); await reply(env, chat, "🌍 اختر الدولة:", COUNTRY_MENU); return; }
@@ -1027,11 +1053,34 @@ async function handleMessage(env, message) {
   if (message.location) {
     const lat = Number(message.location.latitude); const lon = Number(message.location.longitude);
     if (!Number.isFinite(lat) || !Number.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) { return; }
-    await saveUserLocation(env.DB, chat, lat, lon);
+      await saveUserLocation(env.DB, chat, lat, lon);
     const state = await getState(env.DB, chat);
+    
+    if (state.country) {
+      // إذا كان المستخدم قد اختار دولة، نبحث عن المحطات داخل تلك الدولة
+      const countryStations = await env.DB.prepare("SELECT * FROM stations WHERE country = ?").bind(state.country).all();
+      const valid = (countryStations.results || []).filter(isEligible).map(s => ({
+        ...s,
+        km: distanceKm(lat, lon, Number(s.latitude), Number(s.longitude))
+      })).sort((a, b) => a.km - b.km);
+      
+      if (!valid.length) {
+        await reply(env, chat, `⚠️ لا توجد محطات مسجلة في ${state.country} حالياً.`);
+        return;
+      }
+      
+      const page = valid.slice(0, 4);
+      const displayStations = page.slice(0, 3);
+      const hasMore = page.length > 3;
+      const heading = `📍 أقرب المحطات لك في ${state.country}`;
+      
+      await reply(env, chat, pageMessage(displayStations, 0, heading), directionsKeyboard(displayStations, 0, hasMore));
+      return;
+    }    
+    // إذا لم يحدد المستخدم دولة، نبحث في جميع المحطات
     const page = await findPage(env.DB, lat, lon, state, 0);
-    if (!page.stations.length) { await reply(env, chat, "لم نجد محطات تطابق اختيارك. اختر بحثًا آخر من القائمة."); return; }
-    const heading = state.country ? `⚡ أقرب المحطات في ${state.country}` : "⚡ أقرب 3 محطات شحن لموقعك";
+    if (!page.stations.length) { await reply(env, chat, "لم نجد محطات قريبة من موقعك."); return; }
+    const heading = "⚡ أقرب 3 محطات شحن لموقعك";
     await reply(env, chat, pageMessage(page.stations, 0, heading), directionsKeyboard(page.stations, 0, page.hasMore)); return;
   }
   if (text === "🌍 البحث حسب الدولة") { await saveState(env.DB, chat, null, "ALL"); await reply(env, chat, "🌍 اختر الدولة:", COUNTRY_MENU); return; }
@@ -1040,9 +1089,30 @@ async function handleMessage(env, message) {
     await env.DB.prepare(`UPDATE user_search_state SET search_active = 1, search_query = NULL, updated_at = CURRENT_TIMESTAMP WHERE chat_id = ?`).bind(String(chat)).run();
     await reply(env, chat, "🔍 البحث عن محطة شحن\n\nاكتب رقم المحطة أو اسم المدينة أو المحطة أو الشركة المشغّلة.\n\nأمثلة:\n🔢 4000\n🏙️ الخبر\n⚡ EVIQ\n📍 SASCO\n⚡ Mall of Qatar\n🇶🇦 قطر مول\n\nللإلغاء اضغط 🏠 القائمة الرئيسية.", SEARCH_MENU); return;
   }
+     if (text === "🔙 رجوع") {
+    const state = await getState(env.DB, chat);
+    if (state.country) {
+      await saveState(env.DB, chat, null, "ALL");
+      await reply(env, chat, "🌍 اختر الدولة:", COUNTRY_MENU);
+    } else {
+      await reply(env, chat, "🏠 القائمة الرئيسية", MAIN_MENU);
+    }
+    return;
+  }
+
   if (Object.prototype.hasOwnProperty.call(COUNTRIES, text)) {
-    const country = COUNTRIES[text]; await saveState(env.DB, chat, country, "ALL");
-    await reply(env, chat, `✅ اخترت ${country}.\n\n📍 اضغط مشاركة موقعي للبحث عن أقرب 3 محطات داخل الدولة.`, COUNTRY_MENU); return;
+    const country = COUNTRIES[text]; 
+    await saveState(env.DB, chat, country, "ALL");
+    await reply(env, chat, `✅ اخترت ${country}.\n\n📍 اضغط "مشاركة موقعي" للبحث عن أقرب 3 محطات داخل الدولة.`, {
+      keyboard: [
+        [{ text: "📍 مشاركة موقعي", request_location: true }],
+       [{ text: "🔙 رجوع" }, { text: "🏠 القائمة الرئيسية" }]
+
+      ],
+      resize_keyboard: true,
+      is_persistent: true
+    }); 
+    return;
   }
   if (text === "📍 أقرب محطة") { await saveState(env.DB, chat, null, "ALL"); await reply(env, chat, "📍 اضغط مشاركة موقعي للبحث عن أقرب المحطات."); return; }
   if (text === "⚡ شحن سريع DC" || text === "🔌 شحن عادي AC") {

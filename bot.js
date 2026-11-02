@@ -40,9 +40,10 @@ var SEARCH_MENU = {
 };
 var SERVICES_MENU = {
   keyboard: [
-    [{ text: "➕ إضافة محطة" }, { text: "🛠️ إبلاغ عن مشكلة" }],
+    [{ text: "➕ إضافة / إبلاغ عن مشكلة بمحطة كهربائية" }],
     [{ text: "💎 عضويتي والاشتراكات" }, { text: "🎁 نقاطي ودعواتي" }],
-    [{ text: "📢 تحديثات واتساب" }, { text: "🏠 القائمة الرئيسية" }]
+    [{ text: "🤝 انضم لمجتمعنا" }, { text: "🏠 القائمة الرئيسية" }]
+
   ],
   resize_keyboard: true,
   is_persistent: true
@@ -1074,7 +1075,12 @@ async function handleMessage(env, message) {
     return;
   }
   if (text === "🛠️ الخدمات والبلاغات") { await reply(env, chat, "🛠️ اختر الخدمة المطلوبة:", SERVICES_MENU); return; }
-  if (text === "📢 تحديثات واتساب") { await reply(env, chat, "📢 انضم إلى مجموعة تحديثات GCC EV Chargers على واتساب.\n\nننشر فيها تحديثات خريطة محطات الشحن وميزات البوت الجديدة.\n\nالمجموعة مخصصة للإعلانات والتحديثات فقط.", { inline_keyboard: [[{ text: "📢 الانضمام إلى مجموعة واتساب", url: WHATSAPP_UPDATES_URL }]] }); return; }
+  if (text === "🤝 انضم لمجتمعنا") {
+    await reply(env, chat, "🤝 انضم إلى مجتمع GCC EV Chargers على واتساب.\n\nننشر فيه تحديثات خريطة محطات الشحن، ميزات البوت الجديدة، وأي إعلانات تخص مجتمع السيارات الكهربائية في الخليج.\n\nالمجموعة مخصصة للفائدة العامة والمشاركة.", { 
+      inline_keyboard: [[{ text: "🤝 الانضمام إلى مجتمع واتساب", url: WHATSAPP_UPDATES_URL }]] 
+    }); 
+    return;
+  }
   if (text === "🌍 البحث حسب الدولة") { await saveState(env.DB, chat, null, "ALL"); await reply(env, chat, "🌍 اختر الدولة:", COUNTRY_MENU); return; }
   if (text === "🔋 جميع أنواع الشحن") { await saveState(env.DB, chat, null, "ALL"); await reply(env, chat, "✅ تم اختيار جميع أنواع الشحن.\n\n📍 شارك موقعك لعرض أقرب المحطات.", CHARGER_TYPE_MENU); return; }
   if (text === MEMBERSHIP_MENU_LABEL || text === "/subscription") { await subscriptionOverview(env, String(message.from.id)); return; }

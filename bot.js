@@ -155,11 +155,25 @@ function isEligible(station) {
 }
 __name(isEligible, "isEligible");
 async function findPage(db, lat, lon, state, offset = 0) {
-  const query = state.country ? db.prepare("SELECT * FROM stations WHERE country = ?").bind(state.country) : db.prepare("SELECT * FROM stations");
+  // جلب جميع المحطات بطريقة بسيطة (بدون استعلام معقد)
+  const query = db.prepare("SELECT * FROM stations");
   const data = await query.all();
-  const ordered = (data.results || []).filter(s => matchesMode(s, state.charging_mode)).filter(isEligible).map(s => ({ ...s, km: distanceKm(lat, lon, Number(s.latitude), Number(s.longitude)) })).sort((a, b) => a.km - b.km);
+  
+  // تصفية المحطات حسب الدولة ونوع الشاحن برمجياً
+  const ordered = (data.results || [])
+    .filter(s => matchesMode(s, state.charging_mode))
+    .filter(isEligible)
+    .map(s => ({
+      ...s,
+      km: distanceKm(lat, lon, Number(s.latitude), Number(s.longitude))
+    }))
+    .sort((a, b) => a.km - b.km);
+    
   const selected = ordered.slice(offset, offset + 4);
-  return { stations: selected.slice(0, 3), hasMore: selected.length > 3 };
+  return { 
+    stations: selected.slice(0, 3), 
+    hasMore: selected.length > 3 
+  };
 }
 __name(findPage, "findPage");
 function normalizeSearch(value) {
@@ -323,8 +337,8 @@ async function acceptTripPoint(env, chat, trip, point) {
     await setTrip(env.DB, chat, { start_lat: point.lat, start_lon: point.lon, start_name: point.name, step: "end_choose" });
     await reply(env, chat, `✅ الانطلاق: ${point.name}\n\n` + (point.approximate ? "ℹ️ موقع المدينة تقديري اعتمادًا على مركز المدينة.\n\n" : "") + pointPrompt(false), TRIP_POINT_MENU);
   } else {
-    await setTrip(env.DB, chat, { end_lat: point.lat, end_lon: point.lon, end_name: point.name, step: "mode_choose" });
-    await reply(env, chat, `✅ الوجهة: ${point.name}\n\n⚡ اختر نوع محطات الشحن على مسار الرحلة:`, TRIP_MODE_MENU);
+    await setTrip(env.DB, chat, { end_lat: point.lat, end_lon: point.lon, end_name: point.name, step: "battery_percent" });
+await reply(env, chat, `✅ الوجهة: ${point.name}\n\n🔋 كم نسبة البطارية الحالية؟ اكتب رقمًا من 1 إلى 100 (مثال: 80).`);
   }
 }
 __name(acceptTripPoint, "acceptTripPoint");
@@ -503,9 +517,20 @@ async function showTripResults(env, chat, trip) {
     const battery = tripBatterySummary(trip, route.km);
     const serialized = JSON.stringify({ view: "ALL", battery, items: stations.map(s => ({ id: s.id, gap: s.routeGap, km: route.km > 0 ? s.routePosition / Math.max(0.001, route.points.reduce((sum, p, i) => i ? sum + distanceKm(route.points[i - 1][0], route.points[i - 1][1], p[0], p[1]) : sum, 0)) * route.km : 0 })) });
     await env.DB.prepare(`INSERT INTO trip_planner_results (chat_id, station_ids, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) ON CONFLICT(chat_id) DO UPDATE SET station_ids = excluded.station_ids, updated_at = CURRENT_TIMESTAMP`).bind(String(chat), serialized).run();
-    if (battery) {
+       if (battery) {
       const status = battery.finish >= 20 ? "✅ يمكن الوصول نظريًا دون شحن مع احتياطي 20%." : "⚠️ يُنصح بالشحن أثناء الرحلة.";
-      await reply(env, chat, `🔋 البطارية عند الانطلاق: ${battery.pct}%\n🏁 المتوقع عند الوصول: ${battery.finish.toFixed(1)}%\n🎯 مستوى البحث: ${battery.target.toFixed(1)}% بعد ${battery.targetKm.toFixed(0)} كم تقريبًا\n${status}\n\nاختر طريقة عرض المحطات:`, TRIP_DISPLAY_MENU);
+      
+      let advice = "";
+      if (battery.finish < 20) {
+        const nearest = stations.find(s => s.km > 0 && s.km <= battery.targetKm);
+        if (nearest) {
+          advice = `\n\n💡 ننصح بالتوقف في محطة **${nearest.name}** (التي تبعد ${nearest.km.toFixed(0)} كم من انطلاقك) لشحن سيارتك.`;
+        } else if (stations.length > 0) {
+          advice = `\n\n💡 ننصح بالتوقف في أول محطة متاحة على طريقك: **${stations[0].name}**.`;
+        }
+      }
+      
+      await reply(env, chat, `🔋 البطارية عند الانطلاق: ${battery.pct}%\n🏁 المتوقع عند الوصول: ${battery.finish.toFixed(1)}%\n🎯 مستوى البحث: ${battery.target.toFixed(1)}% بعد ${battery.targetKm.toFixed(0)} كم تقريبًا\n${status}${advice}\n\nاختر طريقة عرض المحطات:`, TRIP_DISPLAY_MENU);
     } else {
       await reply(env, chat, "اختر طريقة عرض المحطات:", TRIP_DISPLAY_MENU);
     }
@@ -551,11 +576,41 @@ async function handleTripText(env, chat, text, trip) {
   }
   if (trip.step === "mode_choose") {
     const options = { "⚡ شحن سريع DC فقط": "DC", "🔌 شحن عادي AC فقط": "AC", "🔋 جميع محطات الشحن": "ALL" };
-    if (!options[text]) { await reply(env, chat, "اختر نوع الشحن من القائمة.", TRIP_MODE_MENU); return; }
-    await setTrip(env.DB, chat, { step: "battery_percent", mode: options[text] });
-    await reply(env, chat, "🔋 كم نسبة البطارية الحالية؟ اكتب رقمًا من 1 إلى 100 (مثال: 80)."); return;
+    if (!options[text]) { 
+      await reply(env, chat, "اختر نوع الشحن من القائمة.", TRIP_MODE_MENU); 
+      return; 
+    }
+    await setTrip(env.DB, chat, { mode: options[text] });
+    // بما أننا قمنا بالفعل بإدخال البطارية والسعة والاستهلاك، نعرض النتائج مباشرة
+    const current = await getTrip(env.DB, chat);
+    const completed = await showTripResults(env, chat, current);
+    if (completed) await clearTrip(env.DB, chat); 
+    return;
   }
-  if (["battery_percent", "battery_capacity", "battery_consumption"].includes(trip.step)) {
+    if (["battery_percent", "battery_capacity", "battery_consumption"].includes(trip.step)) {
+    const value = Number(text.replace(",", "."));
+    const rules = { 
+      battery_percent: [1, 100, "battery_capacity", "🔋 ما سعة البطارية بالكيلوواط ساعة kWh؟ مثال: 100"], 
+      battery_capacity: [5, 250, "battery_consumption", "⚡ ما متوسط استهلاك السيارة kWh/100km؟ مثال: 22"], 
+      battery_consumption: [5, 80, "mode_choose", ""] // الخطوة التالية هي اختيار نوع الشاحن
+    };
+    const [min, max, next, prompt] = rules[trip.step];
+    if (!Number.isFinite(value) || value < min || value > max) { 
+      await reply(env, chat, `⚠️ أدخل رقمًا بين ${min} و${max}.`); 
+      return; 
+    }
+    await setTrip(env.DB, chat, { [trip.step]: value, step: next });
+    
+    if (next === "mode_choose") {
+      await reply(env, chat, "⚡ اختر نوع محطات الشحن على مسار الرحلة:", TRIP_MODE_MENU);
+      return;
+    }
+    
+    if (prompt) { 
+      await reply(env, chat, prompt); 
+      return; 
+    }
+  } {
     const value = Number(text.replace(",", "."));
     const rules = { battery_percent: [1, 100, "battery_capacity", "🔋 ما سعة البطارية بالكيلوواط ساعة kWh؟ مثال: 100"], battery_capacity: [5, 250, "battery_consumption", "⚡ ما متوسط استهلاك السيارة kWh/100km؟ مثال: 22"], battery_consumption: [5, 80, "calculating", ""] };
     const [min, max, next, prompt] = rules[trip.step];

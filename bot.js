@@ -517,16 +517,29 @@ async function showTripResults(env, chat, trip) {
     const battery = tripBatterySummary(trip, route.km);
     const serialized = JSON.stringify({ view: "ALL", battery, items: stations.map(s => ({ id: s.id, gap: s.routeGap, km: route.km > 0 ? s.routePosition / Math.max(0.001, route.points.reduce((sum, p, i) => i ? sum + distanceKm(route.points[i - 1][0], route.points[i - 1][1], p[0], p[1]) : sum, 0)) * route.km : 0 })) });
     await env.DB.prepare(`INSERT INTO trip_planner_results (chat_id, station_ids, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) ON CONFLICT(chat_id) DO UPDATE SET station_ids = excluded.station_ids, updated_at = CURRENT_TIMESTAMP`).bind(String(chat), serialized).run();
-       if (battery) {
-      const status = battery.finish >= 20 ? "✅ يمكن الوصول نظريًا دون شحن مع احتياطي 20%." : "⚠️ يُنصح بالشحن أثناء الرحلة.";
+    if (battery) {
+      const status = battery.finish >= 25 ? "✅ يمكن الوصول نظريًا دون شحن مع احتياطي 25%." : "⚠️ يُنصح بالشحن أثناء الرحلة (احتياطي أقل من 25%).";
       
       let advice = "";
-      if (battery.finish < 20) {
-        const nearest = stations.find(s => s.km > 0 && s.km <= battery.targetKm);
+      if (battery.finish < 25) {
+        // البحث عن المحطة الأقرب لمنتصف المسافة
+        let nearest = null;
+        let minDiff = Infinity;
+        const midPoint = route.km / 2;
+        for (const s of stations) {
+          if (s.routePosition > 0) {
+            const diff = Math.abs(s.routePosition - midPoint);
+            if (diff < minDiff) {
+              minDiff = diff;
+              nearest = s;
+            }
+          }
+        }
+        if (!nearest && stations.length > 0) {
+          nearest = stations[0];
+        }
         if (nearest) {
-          advice = `\n\n💡 ننصح بالتوقف في محطة **${nearest.name}** (التي تبعد ${nearest.km.toFixed(0)} كم من انطلاقك) لشحن سيارتك.`;
-        } else if (stations.length > 0) {
-          advice = `\n\n💡 ننصح بالتوقف في أول محطة متاحة على طريقك: **${stations[0].name}**.`;
+          advice = `\n\n💡 ننصح بالتوقف في محطة **${nearest.name}** (التي تبعد ${nearest.routePosition ? nearest.routePosition.toFixed(0) : '0'} كم من انطلاقك) لشحن سيارتك.`;
         }
       }
       
@@ -534,7 +547,6 @@ async function showTripResults(env, chat, trip) {
     } else {
       await reply(env, chat, "اختر طريقة عرض المحطات:", TRIP_DISPLAY_MENU);
     }
-    await rewardQualify(env, { chat: { type: "private" }, from: { id: chat } });
     try { await batterySaveRoute(env, chat, route.km); } catch (error) { console.error("BATTERY_ROUTE_SAVE_FAILED", error); }
     return true;
   } catch (error) {

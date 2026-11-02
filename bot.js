@@ -70,7 +70,7 @@ var TRIP_DISPLAY_MENU = { keyboard: [[{text:"🎯 محطات الشحن حسب �
 function tripBatterySummary(trip, km) {
   const pct=Number(trip.battery_percent), cap=Number(trip.battery_capacity), use=Number(trip.battery_consumption);
   if (!(pct>0&&pct<=100&&cap>=5&&cap<=250&&use>=5&&use<=80)) return null;
-  const perKm=use/cap, finish=pct-km*perKm, target=pct/2, targetKm=(pct-target)/perKm, reserveKm=(pct-20)/perKm;
+  const perKm=use/cap, finish=pct-km*perKm, target=25, targetKm=(pct-target)/perKm, reserveKm=(pct-25)/perKm;
   return {pct,cap,use,finish,target,targetKm,reserveKm,perKm,km};
 }
 function tripDisplayItems(data) {

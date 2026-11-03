@@ -1192,7 +1192,9 @@ async function handleMessage(env, message) {
     const mode = text.includes("DC") ? "DC" : "AC"; await saveState(env.DB, chat, null, mode);
     await reply(env, chat, `✅ تم اختيار الشحن ${mode}.\n\n📍 اضغط مشاركة موقعي لعرض أقرب 3 محطات.`, CHARGER_TYPE_MENU); return;
   }
-    if (text === "🛠️ الإبلاغ عن مشكلة" || text === "🛠️ إبلاغ عن مشكلة") {
+    
+if (text === "➕ إضافة / إبلاغ عن مشكلة بمحطة كهربائية" || text === "🛠️ الإبلاغ عن مشكلة" || text === "🛠️ إبلاغ عن مشكلة") {
+
     await saveState(env.DB, chat, null, "ALL");
     await reply(env, chat, "🛠️ نموذج البلاغات\n\nافتح النموذج واختر نوع البلاغ المناسب.\nنفس النموذج مخصص للأعطال وإضافة المحطات.", { inline_keyboard: [[{ text: "📝 فتح نموذج Google", url: FORM_URL }]] }); 
     return;
